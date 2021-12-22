@@ -52,12 +52,11 @@ def cleanse_featureš(data_df):
     data_df.loc[data_df["vendor"].str.contains('-offline'),'on_off'] = 'offline'
     data_df.loc[data_df["vendor"].str.contains('- offline'),'on_off'] = 'offline'
     data_df = data_df[data_df['on_off'] != '__']
-    # #Creat the tmp with vendor, title, product and tags for the NLP
-    # data_df['vendor_tmp'] = data_df['vendor'].astype(str)
-    # data_df['title_tmp'] = data_df['title'].astype(str)
-    # data_df['product_type_tmp'] = data_df['product_type'].astype(str)
-    # data_df['tags_tmp'] = data_df['tags'].astype(str)
-    # data_df['tmp_NLP'] = data_df[['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp']].agg(' '.join, axis=1)
-    # data_df = data_df.drop(columns=['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp'])
-    # #drop vendor
+    # Creat the tmp with vendor, title, product and tags for the NLP
+    data_df['vendor_tmp'] = data_df['vendor'].astype(str)
+    data_df['title_tmp'] = data_df['title'].astype(str)
+    data_df['product_type_tmp'] = data_df['product_type'].astype(str)
+    data_df['tags_tmp'] = data_df['tags'].astype(str)
+    data_df['tmp_NLP'] = data_df[['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp']].agg(' '.join, axis=1)
+    data_df = data_df.drop(columns=['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp'])
     return data_df 

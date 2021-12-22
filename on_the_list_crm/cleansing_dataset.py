@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 
-#read data 
+#read data
 def get_data():
     #load data
     data_df = pd.read_csv('../raw_data/data_400_000_rows_clean_df.csv')
-    #change the data        
+    #change the data
     for column in data_df.columns:
         if data_df[column].dtype == 'O':
             data_df[column] = data_df[column].str.lower()
@@ -22,7 +22,7 @@ def rename_columns(data_df):
                         'price_qty':'final_price',
                         'email':'customer_ID',
                         'Nationality':'nationality'}, inplace = True)
-    return data_df 
+    return data_df
 
 def cleanse_featureš(data_df):
     #drop unimportant features as itemdid, customerid.
@@ -37,7 +37,7 @@ def cleanse_featureš(data_df):
     data_df.loc[data_df['age'] < 18, 'age'] = round(data_df['age'].mean())
     data_df.loc[data_df['age'] > 90, 'age'] = round(data_df['age'].mean())
     #remove gift sales from db
-    data_df = data_df[data_df['price'] != 0]    
+    data_df = data_df[data_df['price'] != 0]
     #OTL membership sales
     data_df = data_df[data_df['title'] != 'onthelist premium membership']
     #Other OTL sales
@@ -52,12 +52,13 @@ def cleanse_featureš(data_df):
     data_df.loc[data_df["vendor"].str.contains('-offline'),'on_off'] = 'offline'
     data_df.loc[data_df["vendor"].str.contains('- offline'),'on_off'] = 'offline'
     data_df = data_df[data_df['on_off'] != '__']
-    # #Creat the tmp with vendor, title, product and tags for the NLP
-    # data_df['vendor_tmp'] = data_df['vendor'].astype(str)
-    # data_df['title_tmp'] = data_df['title'].astype(str)
-    # data_df['product_type_tmp'] = data_df['product_type'].astype(str)
-    # data_df['tags_tmp'] = data_df['tags'].astype(str)
-    # data_df['tmp_NLP'] = data_df[['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp']].agg(' '.join, axis=1)
-    # data_df = data_df.drop(columns=['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp'])
-    # #drop vendor
-    return data_df 
+
+    # Creat the tmp with vendor, title, product and tags for the NLP
+    data_df['vendor_tmp'] = data_df['vendor'].astype(str)
+    data_df['title_tmp'] = data_df['title'].astype(str)
+    data_df['product_type_tmp'] = data_df['product_type'].astype(str)
+    data_df['tags_tmp'] = data_df['tags'].astype(str)
+    data_df['tmp_NLP'] = data_df[['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp']].agg(' '.join, axis=1)
+    data_df = data_df.drop(columns=['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp'])
+
+    return data_df

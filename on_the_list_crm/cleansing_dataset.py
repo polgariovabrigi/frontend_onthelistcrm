@@ -1,10 +1,12 @@
 import pandas as pd
 import numpy as np
+from scipy.sparse import data
 
 #read data
-def get_data():
+def get_data(rows = None):
+
     #load data
-    data_df = pd.read_csv('../raw_data/data_400_000_rows_clean_df.csv')
+    data_df = pd.read_csv('data/2020-2021.csv', nrows=rows)
     #change the data
     for column in data_df.columns:
         if data_df[column].dtype == 'O':
@@ -12,32 +14,34 @@ def get_data():
     return data_df
 
 
+
+
 def rename_columns(data_df):
     #rename existing columns
-    data_df = data_df.rename(columns={'_sdc_source_key_id':'order_ID',
-                        'sku':'item_ID',
-                        'item price':'item_price',
-                        'item quantity':'item_quantity',
-                        'line-item discount':'discount',
-                        'price_qty':'final_price',
-                        'email':'customer_ID',
-                        'Nationality':'nationality'}, inplace = True)
+    data_df.rename(columns={'_sdc_source_key_id':'order_ID',
+                            'sku':'item_ID',
+                            'price':'item_price',
+                            'quantity':'item_quantity',
+                            'discount' : 'item_discount',
+                            'price_qty':'final_price',
+                            'email':'customer_ID',
+                            'Nationality':'nationality'}, inplace = True)
     return data_df
 
 def cleanse_featureš(data_df):
     #drop unimportant features as itemdid, customerid.
-    data_df = data_df.dropna(subset=['item_ID', 'customer_ID','vendor'],inplace=True)
+    data_df = data_df.dropna(subset=['item_ID', 'customer_ID','vendor'])
     #impute missing nationality with HKSAR
-    data_df['nationality'] = data_df['nationality'].fillna('hong kong sar')
+    data_df['nationality'].fillna('hong kong sar')
     #impute missing gender with Female gender
-    data_df['gender'] = data_df['gender'].fillna('female')
+    data_df['gender'].fillna('female')
     #impute missing age with with age mean
-    data_df['age'] = data_df['age'].fillna(round(data_df['age'].mean()))
+    data_df['age'].fillna(round(data_df['age'].mean()))
     #handling age outliers
     data_df.loc[data_df['age'] < 18, 'age'] = round(data_df['age'].mean())
     data_df.loc[data_df['age'] > 90, 'age'] = round(data_df['age'].mean())
     #remove gift sales from db
-    data_df = data_df[data_df['price'] != 0]
+    data_df = data_df[data_df['item_price'] != 0]
     #OTL membership sales
     data_df = data_df[data_df['title'] != 'onthelist premium membership']
     #Other OTL sales
@@ -62,3 +66,14 @@ def cleanse_featureš(data_df):
     data_df = data_df.drop(columns=['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp'])
 
     return data_df
+
+
+
+if __name__ == "__main__" :
+
+    data_df = get_data(rows=None)
+    data_df = rename_columns(data_df)
+    data_df = cleanse_featureš(data_df)
+    # print(data_df.columns)
+
+    print(data_df)

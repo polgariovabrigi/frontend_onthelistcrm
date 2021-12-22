@@ -5,7 +5,6 @@ from sklearn.pipeline import Pipeline #only for the if name=main
 from sklearn.compose import ColumnTransformer #only for the if name=main
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler #only for the if name=main
 from cleansing_dataset import *
-import statistics
 
 ### class Segmentation :
 ###   input :

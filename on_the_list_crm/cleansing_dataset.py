@@ -28,7 +28,7 @@ def rename_columns(data_df):
                             'Nationality':'nationality'}, inplace = True)
     return data_df
 
-def cleanse_featureš(data_df):
+def cleanse_features(data_df):
     #drop unimportant features as itemdid, customerid.
     data_df = data_df.dropna(subset=['item_ID', 'customer_ID','vendor'])
     #impute missing nationality with HKSAR
@@ -67,13 +67,15 @@ def cleanse_featureš(data_df):
 
     return data_df
 
+## fonction calling all the others.
+def get_name_clean(rows = None):
+    data_df = get_data(rows = rows)
+    data_df = rename_columns(data_df)
+    data_df = cleanse_features(data_df)
+    return data_df
 
 
 if __name__ == "__main__" :
 
-    data_df = get_data(rows=None)
-    data_df = rename_columns(data_df)
-    data_df = cleanse_featureš(data_df)
-    # print(data_df.columns)
-
+    data_df = get_name_clean(rows = 50000)
     print(data_df)

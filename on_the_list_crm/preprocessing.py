@@ -1,25 +1,52 @@
+from pandas.core.arrays.integer import Int8Dtype
+from six import print_
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler
-import cleansing_dataset
+import pandas as pd
+from sklearn import set_config; set_config(display='diagram')
 
-def encode_data(rows = None):
+class Encoder():
 
-    data_df = cleansing_dataset.get_name_clean(rows=rows)
+    def __init__(self):
+        self.preprocessor = None
 
-    categorical_ord_enc = OneHotEncoder(handle_unknown='ignore')
-    numerical_enc = MinMaxScaler()
-    scaler = StandardScaler()
+    def init(self):
 
-    preprocessor = ColumnTransformer([
-        ('normal_distributed_encoded', scaler, data_df[['age']]),
-        ('num_minmax_encoded', numerical_enc, data_df[['item_price', 'final_price','item_quantity','item_discount']]),
-        ('categorical_encoded', categorical_ord_enc, data_df[['vendor','product_cat','gender','product_gender','premium_status','district','nationality','on_off']])],
-        remainder = "passthrough")
-    return preprocessor
+        categorical_ord_enc = OneHotEncoder(sparse = False,dtype='int8')
+        numerical_enc = MinMaxScaler()
+        scaler = StandardScaler()
+
+        self.preprocessor = ColumnTransformer([
+            ('normal_distributed_encoded', scaler, ['age']),
+            ('num_minmax_encoded', numerical_enc, ['item_price', 'final_price','item_quantity','item_discount']),
+            ('categorical_encoded', categorical_ord_enc, ['vendor','product_cat','gender','product_gender','premium_status','district','nationality','on_off'])])
+            # remainder = "passthrough")
+
+        return self.preprocessor
+
+    def fit(self,data_df):
+        self.preprocessor.fit(data_df)
+        return self.preprocessor
+
+    def transform(self,data_df,dtype='float64'):
+        id_df = data_df[['Unnamed: 0','order_ID','item_ID','date','customer_ID']]
+        data_array_transformed = self.preprocessor.transform(data_df)
+        data_df_transformed = pd.DataFrame(data_array_transformed)
+        data_df_transformed = data_df_transformed.astype(dtype)
+        for column in id_df.columns:
+            data_df_transformed[column]=id_df[column]
+        return data_df_transformed
+
 
 if __name__ == "__main__" :
 
-    # data_df = cleansing_dataset.get_name_clean(rows=50000)
-    print(encode_data(rows = 50000))
+    data_df = pd.read_csv('data/all_clean.csv')
+    data_df = data_df.sample(n=20000,random_state=42)
+    preprocessor = Encoder()
+    preprocessor.init()
+    preprocessor.fit(data_df)
+    data_df_transformed = preprocessor.transform(data_df)
+
+    # print(data_df_transformed)

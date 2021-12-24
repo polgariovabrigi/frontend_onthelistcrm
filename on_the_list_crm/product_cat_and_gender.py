@@ -13,7 +13,7 @@ from tensorflow.keras.models import load_model
 import json
 
 
-def fit(batch_size=32,verbose=0, rows=200000):
+def fit(batch_size=32,verbose=0, rows=200_000):
     data_df,data_sample_200_000_df = get_data(rows=rows)
     data_sample_200_000_df = manual_encoding_data_for_product_cat(data_sample_200_000_df)
     data_sample_200_000_df = manual_encoding_data_for_product_gender(data_sample_200_000_df)
@@ -348,19 +348,11 @@ def transform(data_df,model,dict_label,tokenizer,verbose=0):
 
 if __name__ == "__main__" :
 
-    data_df,model,dict_label,tokenizer_ = fit(batch_size=32,verbose=1)
-    # save_the_model(model)
+    # quick try #
+    data_df,model,dict_label,tokenizer_ = fit(batch_size=2048,verbose=1,rows=20_000)
+    # long run #
+    # data_df,model,dict_label,tokenizer_ = fit(batch_size=32,verbose=1)
 
-    # f = open('product_cat_dict.txt','r')
-    # dict_label_str = f.read()
-    # dict_label_str = dict_label_str.replace("'", "\"")
-    # dict_label = json.loads(dict_label_str)
-
-    # data_df,data_sample_200_000_df = get_data(rows = 20_000)
-    # print('################## OK 1')
-    # model = load_model('knn_model_for_product_cat')
-    # print('################## OK 3')
     data_df = transform(data_df,model,dict_label,tokenizer_,verbose=1)
-    print('################## OK 4')
     print(data_df)
-    data_df.to_csv('data/all_clean.csv')
+    # data_df.to_csv('data/all_clean.csv')

@@ -44,8 +44,8 @@ class Segmentation():
             preprocessor = Encoder()
             preprocessor.init()
             preprocessor.fit(data_df)
-            self.data_df_transformed = preprocessor.transform(data_df)
-            return self.data_df_transformed
+            self.data_array_transformed,self.id_df = preprocessor.transform(data_df)
+            return self.data_array_transformed,self.id_df
 
         data_df = pd.read_csv('data/all_clean.csv')
         data_df = data_df.sample(n=20_000,random_state=42) #  <<================= to delet later
@@ -53,12 +53,10 @@ class Segmentation():
         preprocessor = Encoder()
         preprocessor.init()
         preprocessor.fit(data_df)
-        self.data_df_transformed = preprocessor.transform(data_df)
-        # puting the customer_ID on a side
-        self.customer_ID_df = self.data_df_transformed[['customer_ID']]
-        self.X_train = self.data_df_transformed.drop(columns=['Unnamed: 0','order_ID','item_ID','date','customer_ID'])
+        self.data_array_transformed,self.id_df = preprocessor.transform(data_df)
 
-        self.X_train = self.X_train.astype(dtype = 'float')
+        self.X_train = self.data_array_transformed
+        # self.X_train = self.X_train.astype(dtype = 'float')
 
         # for column in self.X_train.columns:
         #     if self.X_train[column].dtypes != 'float64':
@@ -83,12 +81,12 @@ class Segmentation():
     #     return self.n_cluster
 
     def fit(self,n_cluster=10):
-        print('a')
         # doing the kmeans model
         km = KMeans(n_clusters=n_cluster)
-        print('b')
+
+
         km.fit(self.X_train)
-        print('c')
+
         # returning the segmntation df with ID (one customer_ID can epear many times)
         customer_segmentation_list = km.labels_.tolist()
         self.customer_ID_df['segmentation'] = customer_segmentation_list

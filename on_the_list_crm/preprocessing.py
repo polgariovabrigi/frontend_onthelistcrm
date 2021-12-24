@@ -31,13 +31,13 @@ class Encoder():
         return self.preprocessor
 
     def transform(self,data_df,dtype='float64'):
-        id_df = data_df[['Unnamed: 0','order_ID','item_ID','date','customer_ID']]
-        data_array_transformed = self.preprocessor.transform(data_df)
-        data_df_transformed = pd.DataFrame(data_array_transformed)
-        data_df_transformed = data_df_transformed.astype(dtype)
-        for column in id_df.columns:
-            data_df_transformed[column]=id_df[column]
-        return data_df_transformed
+        self.id_df = data_df[['Unnamed: 0','order_ID','item_ID','date','customer_ID']]
+        self.data_array_transformed = self.preprocessor.transform(data_df)
+        # data_df_transformed = pd.DataFrame(data_array_transformed)
+        # data_df_transformed = data_df_transformed.astype(dtype)
+        # for column in id_df.columns:
+        #     data_df_transformed[column]=id_df[column]
+        return self.data_array_transformed,self.id_df
 
 
 if __name__ == "__main__" :
@@ -47,6 +47,7 @@ if __name__ == "__main__" :
     preprocessor = Encoder()
     preprocessor.init()
     preprocessor.fit(data_df)
-    data_df_transformed = preprocessor.transform(data_df)
+    data_array_transformed,id_df = preprocessor.transform(data_df)
 
-    # print(data_df_transformed)
+    # print(data_array_transformed.dtype)
+    # print(id_df)

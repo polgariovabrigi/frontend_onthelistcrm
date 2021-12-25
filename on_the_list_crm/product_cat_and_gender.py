@@ -9,8 +9,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras import layers
 from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.models import load_model
-import json
+# from tensorflow.keras.models import load_model
+# import json
 
 
 def fit(batch_size=32,verbose=0, rows=200_000):
@@ -22,7 +22,6 @@ def fit(batch_size=32,verbose=0, rows=200_000):
     X_train_token_pad = padding(X_train_token,max_size)
     model = initiat_the_model(max_size,vocab_size)
     model = fit_the_model(model,X_train_token_pad,y_train,batch_size=batch_size,verbose=verbose)
-
     return(data_df,model,dict_label,tokenizer_)
 
 def get_data(rows = 200_000):
@@ -349,7 +348,7 @@ def transform(data_df,model,dict_label,tokenizer,verbose=0):
 if __name__ == "__main__" :
 
     # quick try #
-    data_df,model,dict_label,tokenizer_ = fit(batch_size=2048,verbose=1,rows=20_000)
+    data_df,model,dict_label,tokenizer_ = fit(batch_size=2048,verbose=1,rows=200_000)
     # long run #
     # data_df,model,dict_label,tokenizer_ = fit(batch_size=32,verbose=1)
 

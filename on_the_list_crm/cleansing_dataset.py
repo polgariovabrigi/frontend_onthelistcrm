@@ -31,12 +31,14 @@ def rename_columns(data_df):
 def cleanse_features(data_df):
     #drop unimportant features as itemdid, customerid.
     data_df = data_df.dropna(subset=['item_ID', 'customer_ID','vendor'])
+    #impute missing district with HKSAR
+    data_df['district'] = data_df['district'].fillna('central & western')
     #impute missing nationality with HKSAR
-    data_df['nationality'].fillna('hong kong sar')
+    data_df['nationality'] = data_df['nationality'].fillna('hong kong sar')
     #impute missing gender with Female gender
-    data_df['gender'].fillna('female')
+    data_df['gender'] = data_df['gender'].fillna('female')
     #impute missing age with with age mean
-    data_df['age'].fillna(round(data_df['age'].mean()))
+    data_df['age'] = data_df['age'].fillna(round(data_df['age'].mean()))
     #handling age outliers
     data_df.loc[data_df['age'] < 18, 'age'] = round(data_df['age'].mean())
     data_df.loc[data_df['age'] > 90, 'age'] = round(data_df['age'].mean())
@@ -77,5 +79,6 @@ def get_name_clean(rows = None):
 
 if __name__ == "__main__" :
 
-    data_df = get_name_clean(rows = 50000)
+    data_df = get_name_clean(rows = 30000)
     print(data_df)
+    print('coucou',data_df.isnull().sum())

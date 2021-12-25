@@ -5,7 +5,6 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
-from sklearn import set_config; set_config(display='diagram')
 
 class Encoder():
 
@@ -14,7 +13,7 @@ class Encoder():
 
     def init(self):
 
-        categorical_ord_enc = OneHotEncoder(sparse = False,dtype='int8')
+        categorical_ord_enc = OneHotEncoder(sparse = False)
         numerical_enc = MinMaxScaler()
         scaler = StandardScaler()
 

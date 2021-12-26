@@ -29,13 +29,10 @@ class Encoder():
         self.preprocessor.fit(data_df)
         return self.preprocessor
 
-    def transform(self,data_df,dtype='float64'):
-        self.id_df = data_df[['Unnamed: 0','order_ID','item_ID','date','customer_ID']]
+    def transform(self,data_df):
+        # self.id_df = data_df[['Unnamed: 0','order_ID','item_ID','date','customer_ID']]
+        self.id_df = data_df[['order_ID','item_ID','date','customer_ID']]
         self.data_array_transformed = self.preprocessor.transform(data_df)
-        # data_df_transformed = pd.DataFrame(data_array_transformed)
-        # data_df_transformed = data_df_transformed.astype(dtype)
-        # for column in id_df.columns:
-        #     data_df_transformed[column]=id_df[column]
         return self.data_array_transformed,self.id_df
 
 

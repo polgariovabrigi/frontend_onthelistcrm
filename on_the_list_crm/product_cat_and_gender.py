@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 # import matplotlib.pyplot as plt
-import cleansing_dataset
+from cleansing_dataset import get_name_clean
 # from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -13,7 +13,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 # import json
 
 
-def fit(batch_size=32,verbose=0, rows=200_000):
+def fit_nlp(batch_size=32,verbose=0, rows=200_000):
     data_df,data_sample_200_000_df = get_data(rows=rows)
     data_sample_200_000_df = manual_encoding_data_for_product_cat(data_sample_200_000_df)
     data_sample_200_000_df = manual_encoding_data_for_product_gender(data_sample_200_000_df)
@@ -26,7 +26,7 @@ def fit(batch_size=32,verbose=0, rows=200_000):
 
 def get_data(rows = 200_000):
     # get the data
-    data_df = cleansing_dataset.get_name_clean()
+    data_df = get_name_clean()
 
     # extracting 200_000 rows
     data_sample_200_000_df = data_df.sample(n = rows,random_state=42)
@@ -285,7 +285,7 @@ def save_the_model(model):
     model.save('knn_model_for_product_cat')
     pass
 
-def transform(data_df,model,dict_label,tokenizer,verbose=0):
+def transform_nlp(data_df,model,dict_label,tokenizer,verbose=0):
     # applying the model to the whole dataset
 
     # extracting the tmp_NLP column
@@ -314,7 +314,6 @@ def transform(data_df,model,dict_label,tokenizer,verbose=0):
             index = sub_list.index(maximum)
             pred_list_tmp.append(index)
         count = count+10000
-
     x_tmp = x.iloc[count:x_size+1]
     x_tmp = x.iloc[count:count+9999]
     x_token = tokenizer.texts_to_sequences(x_tmp)
@@ -324,6 +323,7 @@ def transform(data_df,model,dict_label,tokenizer,verbose=0):
                                 padding='post',
                                 value=0.0)
     prediction = model.predict(x_token_pad,verbose=verbose)
+
     # storing the prediction into pred_list_tmp
     for sub_list in prediction:
         sub_list = sub_list.tolist()
@@ -336,8 +336,6 @@ def transform(data_df,model,dict_label,tokenizer,verbose=0):
     pred_list = []
     for element in pred_list_tmp :
         pred_list.append(dict_label[element])
-
-
     data_df['product_cat'] = pred_list
 
     # removing the tmp_NLP, tags, product_type and title columns
@@ -348,10 +346,10 @@ def transform(data_df,model,dict_label,tokenizer,verbose=0):
 if __name__ == "__main__" :
 
     # quick try #
-    data_df,model,dict_label,tokenizer_ = fit(batch_size=2048,verbose=1,rows=200_000)
+    data_df,model,dict_label,tokenizer_ = fit_nlp(batch_size=2048,verbose=1,rows=200_000)
     # long run #
     # data_df,model,dict_label,tokenizer_ = fit(batch_size=32,verbose=1)
 
-    data_df = transform(data_df,model,dict_label,tokenizer_,verbose=1)
+    data_df = transform_nlp(data_df,model,dict_label,tokenizer_,verbose=1)
     print(data_df)
     # data_df.to_csv('data/all_clean.csv')

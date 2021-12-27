@@ -11,6 +11,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.callbacks import EarlyStopping
 # from tensorflow.keras.models import load_model
 # import json
+import datetime
 
 
 def fit(batch_size=32,verbose=0, rows=200_000):
@@ -281,9 +282,14 @@ def fit_the_model(model,X_train_token_pad,y_train,batch_size=32,verbose=0):
 
     return model
 
-def save_the_model(model):
-    model.save('knn_model_for_product_cat')
-    pass
+def save_the_model(model, path="./knn_model_for_product_cat"):
+    """Save the NLP model to disk, and return the
+    name and location of the file.
+    """
+    ct = datetime.datetime.now()
+    model_name = 'model' + '_' + ct
+    model.save(f"{path}/{model_name}")
+    return model_name
 
 def transform(data_df,model,dict_label,tokenizer,verbose=0):
     # applying the model to the whole dataset

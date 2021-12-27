@@ -2,8 +2,15 @@ import pandas as pd
 import numpy as np
 from scipy.sparse import data
 
+## fonction calling all the others.
+def get_name_clean(rows = None):
+    data_df = get_data_cleansing(rows = rows)
+    data_df = rename_columns(data_df)
+    data_df = cleanse_features(data_df)
+    return data_df
+
 #read data
-def get_data(rows = None):
+def get_data_cleansing(rows = None):
 
     #load data
     data_df = pd.read_csv('data/2020-2021.csv', nrows=rows)
@@ -12,9 +19,6 @@ def get_data(rows = None):
         if data_df[column].dtype == 'O':
             data_df[column] = data_df[column].str.lower()
     return data_df
-
-
-
 
 def rename_columns(data_df):
     #rename existing columns
@@ -30,15 +34,15 @@ def rename_columns(data_df):
 
 def cleanse_features(data_df):
     #drop unimportant features as itemdid, customerid.
-    data_df = data_df.dropna(subset=['item_ID', 'customer_ID','vendor'])
+    data_df.dropna(subset=['item_ID', 'customer_ID','vendor','premium_status'],inplace = True)
     #impute missing district with HKSAR
-    data_df['district'] = data_df['district'].fillna('central & western')
+    data_df['district'].fillna('central & western',inplace = True)
     #impute missing nationality with HKSAR
-    data_df['nationality'] = data_df['nationality'].fillna('hong kong sar')
+    data_df['nationality'].fillna('hong kong sar',inplace = True)
     #impute missing gender with Female gender
-    data_df['gender'] = data_df['gender'].fillna('female')
+    data_df['gender'].fillna('female',inplace = True)
     #impute missing age with with age mean
-    data_df['age'] = data_df['age'].fillna(round(data_df['age'].mean()))
+    data_df['age'].fillna(round(data_df['age'].mean()),inplace = True)
     #handling age outliers
     data_df.loc[data_df['age'] < 18, 'age'] = round(data_df['age'].mean())
     data_df.loc[data_df['age'] > 90, 'age'] = round(data_df['age'].mean())
@@ -69,16 +73,9 @@ def cleanse_features(data_df):
 
     return data_df
 
-## fonction calling all the others.
-def get_name_clean(rows = None):
-    data_df = get_data(rows = rows)
-    data_df = rename_columns(data_df)
-    data_df = cleanse_features(data_df)
-    return data_df
-
 
 if __name__ == "__main__" :
 
-    data_df = get_name_clean(rows = 30000)
-    print(data_df)
-    print('coucou',data_df.isnull().sum())
+    data_df = get_name_clean()
+    # print(data_df)
+    print(data_df.isnull().sum())

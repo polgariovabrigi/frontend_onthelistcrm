@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.cluster import KMeans
-from product_cat_and_gender import fit,transform
+from product_cat_and_gender import fit_nlp,transform_nlp
 from preprocessing import Encoder
 
 
@@ -19,8 +19,8 @@ class Segmentation():
         if self.from_file == False:
             # importing cleaning and creating the rows product_cat and product_gender
             # here rows indicat the number of rows to take to generate the
-            data_df,model,dict_label,tokenizer_ = fit(batch_size=2048,verbose=1,rows=rows)
-            data_df = transform(data_df,model,dict_label,tokenizer_,verbose=1)
+            data_df,model,dict_label,tokenizer_ = fit_nlp(batch_size=2048,verbose=1,rows=rows)
+            data_df = transform_nlp(data_df,model,dict_label,tokenizer_,verbose=1)
         # if we are working with a csv already clean and ready for the kmean model
         else:
             data_df = pd.read_csv('data/all_clean.csv')
@@ -73,7 +73,7 @@ class Segmentation():
 if __name__ == "__main__":
 
     # init the model
-    segmentation = Segmentation(from_file = False, sample = 20_000)
+    segmentation = Segmentation(from_file = True, sample = 20_000)
     # get the data
     X_train = segmentation.clean_transform_data()
     # fir the model

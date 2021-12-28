@@ -1,62 +1,65 @@
 import pandas as pd
-from sklearn.cluster import KMeans
-from product_cat_and_gender import fit_nlp,transform_nlp
-from preprocessing import Encoder
+import pickle
+from datetime import datetime
+import pytz
 
+from product_cat_and_gender import fit_nlp,transform_nlp
+
+from sklearn.cluster import KMeans
+from sklearn.pipeline import Pipeline
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler
 
 
 class Segmentation():
 
-    def __init__(self, from_file = True, sample = False):
-        self.from_file = from_file
+    def __init__(self, sample = False, from_file = False, file_path='data/all_clean.csv', model_path='kmean_model_28_12_2021_16h44.sav'):
         self.sample = sample
+        self.from_file = from_file
+        self.path = file_path
+        self.model_path = model_path
 
 
-    def clean_transform_data(self, rows=200_000):
+    def get_data_and_clean(self, rows_nlp = 200_000):
         # if we are working with a origine csv from Onthelist
         # this part will clean and creat the columns we need
         # for the kmean model
         if self.from_file == False:
             # importing cleaning and creating the rows product_cat and product_gender
             # here rows indicat the number of rows to take to generate the
-            data_df,model,dict_label,tokenizer_ = fit_nlp(batch_size=2048,verbose=1,rows=rows)
-            data_df = transform_nlp(data_df,model,dict_label,tokenizer_,verbose=1)
+            self.data_df,model,dict_label,tokenizer_ = fit_nlp(batch_size=32,verbose=1,rows=rows_nlp)
+            self.data_df = transform_nlp(self.data_df,model,dict_label,tokenizer_,verbose=1)
         # if we are working with a csv already clean and ready for the kmean model
         else:
-            data_df = pd.read_csv('data/all_clean.csv')
+            self.data_df = pd.read_csv(self.path)
         # if work only on a part of the data
         if self.sample != False:
-            data_df = data_df.sample(n=self.sample,random_state=42)
-        # encode the data
-        preprocessor = Encoder()
-        preprocessor.init()
-        preprocessor.fit(data_df)
-        self.data_array_transformed,self.id_df = preprocessor.transform(data_df)
-        # at the end we have a array with all the non_id/non_date colomns encoded
-        # and a dataframe with all the id/date columns
-        # Now we return the array with the name X_train
-        self.X_train = self.data_array_transformed
-        return self.X_train
+            self.data_df = self.data_df.sample(n=self.sample,random_state=42)
+        self.id_df = self.data_df[['order_ID','item_ID','date','customer_ID']]
+        return self.data_df
 
-    # def k_finder(self):
-    #     # inertias = []
-    #     # ks = range(1,50,2)
-    #     # for k in ks:
-    #     #     km_test = KMeans(n_clusters=k).fit(X_train_transformed)
-    #     #     inertias.append(km_test.inertia_)
-    #     self.n_cluster=10
-    #     return self.n_cluster
+    def set_pipeline(self, n_cluster=10):
+        preproc_pipe = ColumnTransformer([('normal_distributed_encoded', StandardScaler(), ['age']),
+                                          ('num_minmax_encoded', MinMaxScaler(), ['item_price', 'final_price','item_quantity','item_discount']),
+                                        #   ('categorical_encoded', OneHotEncoder(sparse = False), ['vendor','product_cat','gender','product_gender','premium_status','district','nationality','on_off'])])
+                                          ('categorical_encoded', OneHotEncoder(sparse = False), ['product_cat','gender','product_gender','premium_status','district','nationality','on_off'])])
+        self.pipe = Pipeline([('preproc', preproc_pipe),
+                              ('pca', PCA(n_components=10,random_state=42)), #81% explained
+                              ('kmeans',KMeans(n_clusters=n_cluster,random_state=42,))
+                              ])
+        return self.pipe
 
-    def fit(self,n_cluster=10):
-        # doing the kmeans model
-        km = KMeans(n_clusters=n_cluster)
-        km.fit(self.X_train)
-        # returning the segmntation df with ID (one customer_ID can epear many times)
-        customer_segmentation_list = km.labels_
-        self.id_df['segmentation'] = customer_segmentation_list
-        return km
+    def fit(self):
+        self.set_pipeline()
+        self.km_model = self.pipe.fit(self.data_df)
+        return self.km_model
 
     def predict(self):
+        # returning the segmntation df with ID (one customer_ID can epear many times)
+        self.id_df['segmentation'] = self.km_model.predict(self.data_df)
         # creating empty list to creat the final DF with unique customer_ID
         seg = []
         cust = []
@@ -69,15 +72,24 @@ class Segmentation():
         self.segment_df = pd.DataFrame({"customer_ID": cust, "customer_segmentation": seg})
         return self.segment_df
 
+    def save_km_model(self):
+        d = datetime.now(pytz.timezone('Asia/Hong_Kong')).strftime("%d_%m_%Y_%Hh%M")
+        filename = f'kmean_model_{d}.sav'
+        pickle.dump(self.km_model, open(filename, 'wb'))
+        return self
+
+    def load_km_model(self):
+        self.km_model = pickle.load(open(self.model_path, 'rb'))
+        return self.km_model
+
 
 if __name__ == "__main__":
 
     # init the model
-    segmentation = Segmentation(from_file = True, sample = 20_000)
-    # get the data
-    X_train = segmentation.clean_transform_data()
-    # fir the model
-    segmentation.fit()
-    # predict
+    segmentation = Segmentation(from_file = True, sample = False)
+    segmentation.get_data_and_clean()
+    # pipe = segmentation.fit()
+    # segmentation.save_km_model(pipe)
+    segmentation.load_km_model()
     segment_df = segmentation.predict()
     print(segment_df)

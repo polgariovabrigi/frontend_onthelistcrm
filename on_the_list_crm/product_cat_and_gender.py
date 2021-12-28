@@ -1,3 +1,4 @@
+from os import ctermid
 import pandas as pd
 import numpy as np
 # import matplotlib.pyplot as plt
@@ -11,6 +12,8 @@ from tensorflow.keras import layers
 from tensorflow.keras.callbacks import EarlyStopping
 # from tensorflow.keras.models import load_model
 # import json
+import datetime
+import pickle
 
 
 def fit_nlp(batch_size=32,verbose=0, rows=200_000):
@@ -22,7 +25,8 @@ def fit_nlp(batch_size=32,verbose=0, rows=200_000):
     X_train_token_pad = padding(X_train_token,max_size)
     model = initiat_the_model(max_size,vocab_size)
     model = fit_the_model(model,X_train_token_pad,y_train,batch_size=batch_size,verbose=verbose)
-    return(data_df,model,dict_label,tokenizer_)
+    model_saved = save_the_model_pickle(model)
+    return(data_df,model,dict_label,tokenizer_, model_saved)
 
 def get_data(rows = 200_000):
     # get the data
@@ -281,9 +285,25 @@ def fit_the_model(model,X_train_token_pad,y_train,batch_size=32,verbose=0):
 
     return model
 
-def save_the_model(model):
-    model.save('knn_model_for_product_cat')
-    pass
+def save_the_model(model, path="./knn_model_for_product_cat"):
+    """Save the NLP model to disk, and return the
+    name and location of the file.
+    """
+    ct = datetime.datetime.now().strftime("%d/%m_%H_%M")
+    model_name = 'model' + '_' + ct
+    model.save(f"{path}/{model_name}")
+    return model_name
+
+
+def save_the_model_pickle(model, path="./knn_model_for_product_cat"):
+    # Export model as pickle file
+    ct = datetime.datetime.now().strftime("%d/%m_%H_%M")
+    modelname = 'model' + '_' + ct
+    with open(f"{path}/{modelname}.pkl", "wb") as file:
+        pickle.dump(model, file)
+    # Load model from pickle file
+    model = pickle.load(open(f"{path}/{modelname}.pkl", "rb"))
+    return model
 
 def transform_nlp(data_df,model,dict_label,tokenizer,verbose=0):
     # applying the model to the whole dataset
@@ -346,7 +366,7 @@ def transform_nlp(data_df,model,dict_label,tokenizer,verbose=0):
 if __name__ == "__main__" :
 
     # quick try #
-    data_df,model,dict_label,tokenizer_ = fit_nlp(batch_size=2048,verbose=1,rows=200_000)
+    data_df,model,dict_label,tokenizer_,model_saved = fit_nlp(batch_size=2048,verbose=1,rows=200)
     # long run #
     # data_df,model,dict_label,tokenizer_ = fit(batch_size=32,verbose=1)
 

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 # import pickle 
 import pandas as pd
-from io import File
+# from io import File
 
 app = FastAPI()
 

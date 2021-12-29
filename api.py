@@ -14,22 +14,22 @@ def root():
 
 #segmentation route
 #get the uploaded files
-@app.post("/get_csv", response_class = StreamingResponse)
-async def get_csv(file: bytes = File(...)):
-    # file as str
-    inputFileAsStr = io.StringIO(str(file,'utf-8'))
-    # dataframe
-    df = pd.read_csv(inputFileAsStr)
-    # output file
-    outFileAsStr = StringIO()
-    df.to_csv(outFileAsStr, index = False)
-    response = StreamingResponse(io.StringIO(df.to_csv(index=False), media_type="csv"),
-        headers={
-            'Content-Disposition': 'attachment;filename=dataset.csv',
-            'Access-Control-Expose-Headers': 'Content-Disposition'
-        }
-    )
-    return response
+# @app.post("/get_csv", response_class = StreamingResponse)
+# async def get_csv(file: bytes = File(...)):
+#     # file as str
+#     inputFileAsStr = io.StringIO(str(file,'utf-8'))
+#     # dataframe
+#     df = pd.read_csv(inputFileAsStr)
+#     # output file
+#     outFileAsStr = StringIO()
+#     df.to_csv(outFileAsStr, index = False)
+#     response = StreamingResponse(io.StringIO(df.to_csv(index=False), media_type="csv"),
+#         headers={
+#             'Content-Disposition': 'attachment;filename=dataset.csv',
+#             'Access-Control-Expose-Headers': 'Content-Disposition'
+#         }
+#     )
+#     return response
 
 #run the model 
 # @app.get("/predict_segment")

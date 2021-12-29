@@ -1,25 +1,21 @@
-# from fastapi import FastAPI
-# from fastapi.responses import StreamingResponse
+from fastapi import FastAPI, File
+from fastapi.responses import StreamingResponse
 # import pickle 
 # import pandas as pd
 # from io import File
 
-# app = FastAPI()
-
 #main page to select what type of prediction client wishes for
-from fastapi import FastAPI
 
 app = FastAPI()
-
-
 @app.get("/")
 def root():
     return "Hello from Cloud Run CD"
 
 #segmentation route
 #get the uploaded files
-# @app.post("/get_csv", response_class = StreamingResponse)
-# async def get_csv(file: bytes = File(...)):
+@app.post("/get_csv", response_class = StreamingResponse)
+async def get_csv(file: bytes = File(...)):
+    pass
 #     # file as str
 #     inputFileAsStr = io.StringIO(str(file,'utf-8'))
 #     # dataframe

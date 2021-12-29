@@ -1,15 +1,20 @@
-from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
+# from fastapi import FastAPI
+# from fastapi.responses import StreamingResponse
 # import pickle 
-import pandas as pd
+# import pandas as pd
 # from io import File
+
+# app = FastAPI()
+
+#main page to select what type of prediction client wishes for
+from fastapi import FastAPI
 
 app = FastAPI()
 
-#main page to select what type of prediction client wishes for
+
 @app.get("/")
 def root():
-    return "On The List AI Prediction"
+    return "Hello from Cloud Run CD"
 
 #segmentation route
 #get the uploaded files
@@ -39,8 +44,8 @@ def root():
 
 
 #customerß
-@app.get("/predict_product")
-def predict_customer():
-    return "Testing our deployment"
+# @app.get("/predict_product")
+# def predict_customer():
+#     return "Testing our deployment"
 
 

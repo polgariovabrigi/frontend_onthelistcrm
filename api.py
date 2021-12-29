@@ -43,3 +43,5 @@ async def get_csv(file: bytes = File(...)):
 @app.get("/predict_product")
 def predict_customer():
     return "Testing our deployment"
+
+

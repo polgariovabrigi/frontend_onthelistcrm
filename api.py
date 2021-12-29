@@ -1,9 +1,8 @@
-from fastapi import FastAPI, File
+from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
-import pickle 
+# import pickle 
 import pandas as pd
-import io
-from io import StringIO
+from io import File
 
 app = FastAPI()
 

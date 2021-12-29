@@ -13,9 +13,15 @@ def root():
 
 #segmentation route
 #get the uploaded files
-@app.post("/get_csv", response_class = StreamingResponse)
-def get_csv(file: bytes = File(...)):
-    return "Hello"
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+   return {
+      "filename": file.filename
+   }
+
+# @app.post("/get_csv", response_class = StreamingResponse)
+# def get_csv(file: bytes = File(...)):
+#     return "Hello"
 #     # file as str
 #     inputFileAsStr = io.StringIO(str(file,'utf-8'))
 #     # dataframe

@@ -15,7 +15,7 @@ def root():
 #get the uploaded files
 @app.post("/get_csv", response_class = StreamingResponse)
 def get_csv(file: bytes = File(...)):
-    pass
+    return "Hello"
 #     # file as str
 #     inputFileAsStr = io.StringIO(str(file,'utf-8'))
 #     # dataframe

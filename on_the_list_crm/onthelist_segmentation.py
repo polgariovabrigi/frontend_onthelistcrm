@@ -3,7 +3,7 @@ import pickle
 from datetime import datetime
 import pytz
 
-from product_cat_and_gender import fit_nlp,transform_nlp
+from product_cat_and_gender import transform_dataset
 
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
@@ -16,11 +16,12 @@ from sklearn.preprocessing import StandardScaler
 
 class Segmentation():
 
-    def __init__(self, sample = False, from_file = False, file_path='data/all_clean.csv', model_path='kmean_model_28_12_2021_16h44.sav'):
+    def __init__(self, sample = False, from_file = False, raw_data_path='data/2020-2021.csv' , file_path='data/all_clean.csv', model_path='kmean_model_28_12_2021_16h44.sav'):
         self.sample = sample
         self.from_file = from_file
-        self.path = file_path
+        self.file_path = file_path
         self.model_path = model_path
+        self.raw_data_path = raw_data_path
 
 
     def get_data_and_clean(self, rows_nlp = 200_000):
@@ -28,13 +29,10 @@ class Segmentation():
         # this part will clean and creat the columns we need
         # for the kmean model
         if self.from_file == False:
-            # importing cleaning and creating the rows product_cat and product_gender
-            # here rows indicat the number of rows to take to generate the
-            self.data_df,model,dict_label,tokenizer_ = fit_nlp(batch_size=32,verbose=1,rows=rows_nlp)
-            self.data_df = transform_nlp(self.data_df,model,dict_label,tokenizer_,verbose=1)
+            self.data_df = transform_dataset(data_path = self.raw_data_path, rows = None, verbose=0)
         # if we are working with a csv already clean and ready for the kmean model
         else:
-            self.data_df = pd.read_csv(self.path)
+            self.data_df = pd.read_csv(self.file_path)
         # if work only on a part of the data
         if self.sample != False:
             self.data_df = self.data_df.sample(n=self.sample,random_state=42)

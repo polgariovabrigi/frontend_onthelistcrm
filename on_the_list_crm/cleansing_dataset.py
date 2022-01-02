@@ -1,14 +1,13 @@
 import pandas as pd
-from sklearn.base import BaseEstimator, TransformerMixin
 
 
-def get_raw_data(path='data/2020-2021.csv', rows = None):
+def get_raw_data(path='data/2020-2021_V2.csv', rows = None):
     #load data
-    data_df = pd.read_csv(path, nrows=rows)
+    data_df = pd.read_csv(path, nrows=rows,encoding='latin1')
     return data_df
 
 
-class BasicCleaner(BaseEstimator, TransformerMixin):
+class BasicCleaner():
 
     def __init__(self):
         pass
@@ -18,6 +17,10 @@ class BasicCleaner(BaseEstimator, TransformerMixin):
 
     def transform(self, data_df, y=None):
         assert isinstance(data_df, pd.DataFrame)
+        # work for 2020-2021_V2.csv
+        if 'vendor_line' in data_df.columns:
+          data_df['vendor'] = data_df['vendor_line']
+          data_df['title'] = data_df['title_line']
         # lowercas all the text
         for column in data_df.columns:
             if data_df[column].dtype == 'O':
@@ -61,18 +64,27 @@ class BasicCleaner(BaseEstimator, TransformerMixin):
         data_df.loc[data_df["vendor"].str.contains('-offline'),'on_off'] = 'offline'
         data_df.loc[data_df["vendor"].str.contains('- offline'),'on_off'] = 'offline'
         data_df = data_df[data_df['on_off'] != '__']
+        data_df['vendor'] = data_df['vendor'].map(lambda x: x.rstrip('-offline'))
+        data_df['vendor'] = data_df['vendor'].map(lambda x: x.rstrip('-online'))
+        data_df['vendor'] = data_df['vendor'].map(lambda x: x.rstrip(' - online'))
+        data_df['vendor'] = data_df['vendor'].map(lambda x: x.rstrip(' - offline'))
+
         # Creat the tmp with vendor, title, product and tags for the NLP
+        data_df['item_price_tmp'] = data_df['item_price'].astype(str)
         data_df['vendor_tmp'] = data_df['vendor'].astype(str)
         data_df['title_tmp'] = data_df['title'].astype(str)
         data_df['product_type_tmp'] = data_df['product_type'].astype(str)
         data_df['tags_tmp'] = data_df['tags'].astype(str)
         data_df['tmp_NLP'] = data_df[['vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp']].agg(' '.join, axis=1)
+        data_df['tmp_NLP_2'] = data_df[['item_price_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp']].agg(' '.join, axis=1)
+        data_df.drop(columns=['vendor_tmp','title_tmp','product_type_tmp','tags_tmp','vendor_line','title_line','item_price_tmp'],inplace=True)
         # creating product_cat and product_gender
         data_df['product_cat'] = '__'
-        data_df['product_gender'] = 'unisex'
+        data_df['product_gender'] = '__'
+        data_df['vendor_cat'] = '__'
         return data_df
 
-class GetDataFrameToTrainNLP(BaseEstimator, TransformerMixin):
+class GetDataFrameToTrainNLP():
 
     def __init__(self):
         pass
@@ -200,6 +212,7 @@ class GetDataFrameToTrainNLP(BaseEstimator, TransformerMixin):
         data_sample_200_000_df.loc[data_sample_200_000_df["product_type"].str.contains('pillow case'),'product_cat'] = 'home'
         data_sample_200_000_df.loc[data_sample_200_000_df["vendor"].str.contains('riedel'),'product_cat'] = 'home'
         data_sample_200_000_df.loc[data_sample_200_000_df["vendor"].str.contains('moleskine'),'product_cat'] = 'home'
+        data_sample_200_000_df.loc[data_sample_200_000_df["vendor"].str.contains('waldmann'),'product_cat'] = 'home'
         # manual encoding for product_gender
         ### men
         data_sample_200_000_df.loc[data_sample_200_000_df["tags"].str.contains('[\s|]men'),'product_gender'] = 'men'
@@ -230,12 +243,8 @@ class GetDataFrameToTrainNLP(BaseEstimator, TransformerMixin):
         y_train = data_for_train_test['product_cat']
         return X_train,y_train
 
-# if __name__ == "__main__" :
 
-#     data_df = get_raw_data()
-
-#     cleaner = BasicCleaner()
-#     cleaner.fit(data_df)
-#     data_df = cleaner.transform(data_df)
-#     print(data_df.isnull().sum())
-#     print(data_df)
+if __name__ == "__main__":
+    data_df = get_raw_data(path='/content/2020-2021_V2.csv')
+    data_df = BasicCleaner().transform(data_df)
+    data_df

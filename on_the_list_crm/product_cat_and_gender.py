@@ -107,24 +107,24 @@ def fit_nlp_model(nlp_model,X_train_token_pad,y_train,batch_size=32,verbose=0):
 
 def save_nlp_model(nlp_model):
     d = datetime.now(pytz.timezone('Asia/Hong_Kong')).strftime("%d_%m_%Y_%Hh%M")
-    filename = f'kmean_model_{d}.sav'
+    filename = f'nlp_model_{d}.sav'
     pickle.dump(nlp_model, open(filename, 'wb'))
     return filename
 
 # ______________________________________________________________________
 
-def transform_dataset(data_path = 'data/2020-2021.csv',rows = None,verbose=0):
+def transform_dataset(data_df,rows = None,verbose=0):
     # applying the model to the whole dataset
 
     # loading the models and the product_cat_dict
-    nlp_model = load_km_model(model_path='nlp_model_29_12_2021_01h16.sav')
-    tokenizer = load_tokenizer(model_path='tokenizer_for_nlp_model_29_12_2021_20h20.sav')
-    with open( 'product_cat_dict.txt', 'rb' ) as f:
+    nlp_model = load_km_model(model_path='nlp_model_30_12_2021_00h29.sav')
+    tokenizer = load_tokenizer(model_path='tokenizer_for_nlp_model_29_12_2021_23h18.sav')
+    with open( 'product_cat_dict_29_12_2021_23h18.txt', 'rb' ) as f:
         dict_label = f.read().decode()
         dict_label = eval(dict_label)
 
     # loading the data
-    data_df = get_raw_data(path=data_path, rows = rows)
+    # data_df = get_raw_data(path=data_path, rows = rows)
     data_df = BasicCleaner().transform(data_df)
 
     # extracting the tmp_NLP column
@@ -193,8 +193,8 @@ if __name__ == "__main__" :
     # quick try #
     # data_df,model,dict_label,tokenizer_ = fit_and_save_nlp_model(batch_size=2048,verbose=1)
     # long run #
-    data_df,model,dict_label,tokenizer_ = fit_and_save_nlp_model(batch_size=32,verbose=1)
+    # data_df,model,dict_label,tokenizer_ = fit_and_save_nlp_model(batch_size=32,verbose=1)
 
-    # data_df = transform_dataset(data_path = 'data/2020-2021.csv',rows = 100_000,verbose=1)
-    # print(data_df)
-    # data_df.to_csv('data/verif.csv')
+    data_df = transform_dataset(data_path = 'data/2020-2021.csv',rows = 100_000,verbose=1)
+    print(data_df)
+    data_df.to_csv('data/verif.csv')

@@ -1,8 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import StreamingResponse
 import pandas as pd
-
-
+from onthelist_segmentation import Segmentation
+from product_cat_and_gender import transform_dataset
 
 #main page for testing API
 app = FastAPI()
@@ -14,43 +13,22 @@ def root():
 @app.post("/uploadfile/")
 async def upload_file(csv_file: UploadFile = File(...)):
     contents = await csv_file.read()
-    # dataframe = file.read_csv(csv_file.file)
-    #get the file
-    #clean
+    data_df = pd.read_dict(contents)
+    segmentation = Segmentation()
+    data_df = transform_dataset(data_df)
+    segmentation.load_km_model()
+    segment_df = segmentation.predict()
+    return segment_df
+
     #return prediction
-    return {"filename": csv_file.filename,
-            "filetype": csv_file.content_type,
-            "content": contents 
-            }  
-
-
+    # return {"filename": csv_file.filename,
+    #         "filetype": csv_file.content_type,
+    #         "content": contents 
+    #         }  
+    
 #Loading the trained model
 # with open("./finalized_model.pkl", "rb") as f:
 #     loaded_model = pickle.load(f)
-
-# @app.post("/get_csv", response_class = StreamingResponse)
-# def get_csv(file: bytes = File(...)):
-#     # file as str
-#     inputFileAsStr = io.StringIO(str(file,'utf-8'))
-#     # dataframe
-#     df = pd.read_csv(inputFileAsStr)
-#     # output file
-#     outFileAsStr = StringIO()
-#     df.to_csv(outFileAsStr, index = False)
-#     response = StreamingResponse(io.StringIO(df.to_csv(index=False), media_type="csv"),
-#         headers={
-#             'Content-Disposition': 'attachment;filename=dataset.csv',
-#             'Access-Control-Expose-Headers': 'Content-Disposition'
-#         }
-#     )
-#     return response
-
-#run the model 
-# @app.get("/predict_segment")
-# def predict_segment(csv):
-#     model = pickle.load(open('kmean_model_28_12_2021_16h_44.sav', 'rb'))
-#     prediction = model.predict(data)
-#     return prediction 
 
 
 #customerß

@@ -55,9 +55,9 @@ class Segmentation():
         self.km_model = self.pipe.fit(self.data_df)
         return self.km_model
 
-    def predict(self):
+    def predict(self, data_df):
         # returning the segmntation df with ID (one customer_ID can epear many times)
-        self.id_df['segmentation'] = self.km_model.predict(self.data_df)
+        self.id_df['segmentation'] = self.km_model.predict(data_df)
         # creating empty list to creat the final DF with unique customer_ID
         seg = []
         cust = []

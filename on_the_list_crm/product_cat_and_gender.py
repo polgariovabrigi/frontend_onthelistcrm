@@ -113,7 +113,7 @@ def save_nlp_model(nlp_model):
 
 # ______________________________________________________________________
 
-def transform_dataset(data_path = 'data/2020-2021.csv',rows = None,verbose=0):
+def transform_dataset(data_df,rows = None,verbose=0):
     # applying the model to the whole dataset
 
     # loading the models and the product_cat_dict
@@ -124,8 +124,9 @@ def transform_dataset(data_path = 'data/2020-2021.csv',rows = None,verbose=0):
         dict_label = eval(dict_label)
 
     # loading the data
-    data_df = get_raw_data(path=data_path, rows = rows)
+    # data_df = get_raw_data(path=data_path, rows = rows)
     data_df = BasicCleaner().transform(data_df)
+    
 
     # extracting the tmp_NLP column
     X = data_df['tmp_NLP']

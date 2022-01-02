@@ -16,28 +16,31 @@ from sklearn.preprocessing import StandardScaler
 
 class Segmentation():
 
-    def __init__(self, sample = False, from_file = False, raw_data_path='data/2020-2021.csv' , file_path='data/all_clean.csv', model_path='kmean_model_28_12_2021_16h44.sav'):
-        self.sample = sample
-        self.from_file = from_file
-        self.file_path = file_path
-        self.model_path = model_path
-        self.raw_data_path = raw_data_path
+    # def __init__(self, sample = False, from_file = False, raw_data_path='data/2020-2021.csv' , file_path='data/all_clean.csv', model_path='kmean_model_28_12_2021_16h44.sav'):
+        # self.sample = sample
+        # self.from_file = from_file
+        # self.file_path = file_path
+        # self.model_path = model_path
+        # self.raw_data_path = raw_data_path
 
+    def __init__(self,data_df):
+        self.data_df = data_df
+        self.id_df = data_df[['order_ID','item_ID','date','customer_ID']]
 
-    def get_data_and_clean(self, rows_nlp = 200_000):
-        # if we are working with a origine csv from Onthelist
-        # this part will clean and creat the columns we need
-        # for the kmean model
-        if self.from_file == False:
-            self.data_df = transform_dataset(data_path = self.raw_data_path, rows = None, verbose=0)
-        # if we are working with a csv already clean and ready for the kmean model
-        else:
-            self.data_df = pd.read_csv(self.file_path)
-        # if work only on a part of the data
-        if self.sample != False:
-            self.data_df = self.data_df.sample(n=self.sample,random_state=42)
-        self.id_df = self.data_df[['order_ID','item_ID','date','customer_ID']]
-        return self.data_df
+    # def get_data_and_clean(self, rows_nlp = 200_000):
+    #     # if we are working with a origine csv from Onthelist
+    #     # this part will clean and creat the columns we need
+    #     # for the kmean model
+    #     if self.from_file == False:
+    #         self.data_df = transform_dataset(data_path = self.raw_data_path, rows = None, verbose=0)
+    #     # if we are working with a csv already clean and ready for the kmean model
+    #     else:
+    #         self.data_df = pd.read_csv(self.file_path)
+    #     # if work only on a part of the data
+    #     if self.sample != False:
+    #         self.data_df = self.data_df.sample(n=self.sample,random_state=42)
+    #     self.id_df = self.data_df[['order_ID','item_ID','date','customer_ID']]
+    #     return self.data_df
 
     def set_pipeline(self, n_cluster=10):
         preproc_pipe = ColumnTransformer([('normal_distributed_encoded', StandardScaler(), ['age']),

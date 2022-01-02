@@ -1,36 +1,23 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import StreamingResponse
-# import pickle 
-# import pandas as pd
-# from io import File
+import pandas as pd
 
-#main page to select what type of prediction client wishes for
 
+
+#main page for testing API
 app = FastAPI()
 @app.get("/")
 def root():
     return "Hello from Cloud Run CD"
 
-#Creating a class for the attributes input to the model.
-# class segment_metrics(BaseModel):
-# 	ph : float
-# 	Hardness :float
-# 	Solids : float
-# 	Chloramines : float
-# 	Sulfate : float
-# 	Conductivity : float
-# 	Organic_carbon : float
-# 	Trihalomethanes : float
-# 	Turbidity : float
-
-
 # #segmentation route
 @app.post("/uploadfile/")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(csv_file: UploadFile = File(...)):
+    dataframe = pd.read_csv(csv_file.file)
     #get the file
     #clean
     #return prediction
-    return {"filename": file.filename}
+    return {"length": len(dataframe)}
   
 
 

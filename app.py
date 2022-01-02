@@ -24,22 +24,27 @@ if uploaded_file is not None:
     file_details = {"filename":uploaded_file.name, "filetype":uploaded_file.type,
                       "filesize":uploaded_file.size}
     st.write(file_details)
+    # d = dict()
+    # with open(uploaded_file.name, 'rb') as f:
+    #   for line in uploaded_file :
+    #     line = line.strip('\n')
+    #     (key, val) = line.split(",")
+    #     d[key] = val
+    # st.write(d)
     #api sending info
-    file_name = uploaded_file.name
+    # st.write(uploaded_file.getvalue())
+    files = {'csv_file': uploaded_file.read()}
     url_post = 'https://on-the-list-crm-sqpnwxjv3a-df.a.run.app//uploadfile/'
-    response = requests.post(url_post, files={'file': uploaded_file.getvalue()})
+    # response = requests.post(url_post,files=uploaded_file)
+    response = requests.post(url_post,files=files)
     api_answer = response.json()
     st.write(api_answer)
     # prediction = Image.open(img_path.get("name"))
     #uploaded data visualization
-    df = pd.read_csv(uploaded_file)
-    st.dataframe(df)
+    # df = pd.read_csv(uploaded_file)
+    # st.dataframe(df)
     
-    
-        # res = requests.post(f"http://backend:8080/{style}", files=files)
-        # img_path = res.json()
-        # image = Image.open(img_path.get("name"))
-        # st.image(image, width=500)
+ 
   
 # enter here the address of your flask api
 url = 'https://on-the-list-crm-sqpnwxjv3a-df.a.run.app'

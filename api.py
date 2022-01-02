@@ -17,8 +17,9 @@ async def upload_file(csv_file: UploadFile = File(...)):
     #get the file
     #clean
     #return prediction
-    return {"Hello"}
-  
+    return {"filename": csv_file.filename,
+            "filetype": csv_file.content_type
+            }  
 
 
 #Loading the trained model

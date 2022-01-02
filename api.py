@@ -24,13 +24,16 @@ def root():
 # 	Turbidity : float
 
 
-
 # #segmentation route
-@app.post("/uploadfile/")
+@app.get("/uploadfile/")
 async def upload_file(file: UploadFile = File(...)):
+    #get the file
+    #cleamn
+    #return prediction
    return {
-       "type": type(file)
-    #   "filename": file.filename
+       "Hello": "Hello",
+       "type": type(file),
+       "filename": file.filename
    }
 
 #Loading the trained model

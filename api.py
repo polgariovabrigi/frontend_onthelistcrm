@@ -13,12 +13,14 @@ def root():
 # #segmentation route
 @app.post("/uploadfile/")
 async def upload_file(csv_file: UploadFile = File(...)):
-    # dataframe = pd.read_csv(csv_file.file)
+    contents = await csv_file.read()
+    # dataframe = file.read_csv(csv_file.file)
     #get the file
     #clean
     #return prediction
     return {"filename": csv_file.filename,
-            "filetype": csv_file.content_type
+            "filetype": csv_file.content_type,
+            "content": contents 
             }  
 
 

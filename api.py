@@ -14,8 +14,8 @@ def root():
 async def upload_file(csv_file: UploadFile = File(...)):
     contents = await csv_file.read()
     data_df = pd.read_dict(contents)
-    segmentation = Segmentation()
     data_df = transform_dataset(data_df)
+    segmentation = Segmentation(data_df)
     segmentation.load_km_model()
     segment_df = segmentation.predict()
     return segment_df

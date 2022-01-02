@@ -80,7 +80,7 @@ class Segmentation():
         return self
 
     def load_km_model(self):
-        self.km_model = pickle.load(open(self.model_path, 'rb'))
+        self.km_model = pickle.load(open('kmean_model_28_12_2021_16h44.sav', 'rb'))
         return self.km_model
 
 

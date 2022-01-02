@@ -9,7 +9,7 @@ python-multipart
 numpy
 pandas
 scikit-learn
-tensorflow
+# tensorflow
 
 # tests/linter
 black

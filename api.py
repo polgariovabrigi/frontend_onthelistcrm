@@ -12,7 +12,7 @@ def root():
     return "Hello from Cloud Run CD"
 
 # #segmentation route
-@app.get("/uploadfile/")
+@app.post("/uploadfile/")
 async def upload_file(file: UploadFile = File(...)):
    return {
       "filename": file.filename
@@ -21,7 +21,6 @@ async def upload_file(file: UploadFile = File(...)):
 
 # @app.post("/get_csv", response_class = StreamingResponse)
 # def get_csv(file: bytes = File(...)):
-#     return "Hello"
 #     # file as str
 #     inputFileAsStr = io.StringIO(str(file,'utf-8'))
 #     # dataframe

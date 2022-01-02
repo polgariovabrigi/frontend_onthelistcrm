@@ -20,11 +20,10 @@ def root():
 #    }
 
 @app.post("/uploadfile/")
-async def create_upload_file(file: app = File(...)):
+async def upload_file(file: UploadFile = File(...)):
    return {
-      "filename" : file.filename
+      "filename": file.filename
    }
-
 
 # UploadFileapp = FastAPI()
 # @app.post("/image") 

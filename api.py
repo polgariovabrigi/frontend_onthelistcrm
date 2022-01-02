@@ -25,16 +25,14 @@ def root():
 
 
 # #segmentation route
-@app.get("/uploadfile/")
+@app.post("/uploadfile/")
 async def upload_file(file: UploadFile = File(...)):
     #get the file
-    #cleamn
+    #clean
     #return prediction
-   return {
-       "Hello": "Hello",
-       "type": type(file),
-       "filename": file.filename
-   }
+    return {"filename": file.filename}
+  
+
 
 #Loading the trained model
 # with open("./finalized_model.pkl", "rb") as f:

@@ -10,12 +10,28 @@ app = FastAPI()
 @app.get("/")
 def root():
     return "Hello from Cloud Run CD"
+#Creating a class for the attributes input to the ML model.
+# class water_metrics(BaseModel):
+# 	ph : float
+# 	Hardness :float
+# 	Solids : float
+# 	Chloramines : float
+# 	Sulfate : float
+# 	Conductivity : float
+# 	Organic_carbon : float
+# 	Trihalomethanes : float
+# 	Turbidity : float
+
+#Loading the trained model
+# with open("./finalized_model.pkl", "rb") as f:
+#     loaded_model = pickle.load(f)
 
 # #segmentation route
 @app.post("/uploadfile/")
 async def upload_file(file: UploadFile = File(...)):
    return {
-      "filename": file.filename
+    #   "filename": file.filename
+    "We communicate"
    }
 
 

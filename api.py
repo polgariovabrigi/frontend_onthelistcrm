@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 import pandas as pd
-from onthelist_segmentation import Segmentation
-from product_cat_and_gender import transform_dataset
+from on_the_list_crm.onthelist_segmentation import Segmentation
+from on_the_list_crm.product_cat_and_gender import transform_dataset
 
 #main page for testing API
 app = FastAPI()

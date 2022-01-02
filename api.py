@@ -20,7 +20,7 @@ def root():
 #    }
 
 @app.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
+async def create_upload_file(file: app = File(...)):
    return {
       "filename" : file.filename
    }

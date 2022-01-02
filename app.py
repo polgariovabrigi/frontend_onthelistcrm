@@ -27,7 +27,7 @@ if uploaded_file is not None:
   
   
 # enter here the address of your flask api
-url = '/'
+url = ''
 response = requests.get(url)
 prediction = response.json()
 # pred = prediction['prediction']

@@ -5,12 +5,11 @@ twine
 wheel>=0.29
 python-multipart
 
-
 # data science
 numpy
 pandas
 scikit-learn
-tensorflow
+# tensorflow
 
 # tests/linter
 black
@@ -26,13 +25,11 @@ mlflow
 s3fs
 fastapi.responses 
 fastapi
+uvicorn
 
 # utilities
 six>=1.14
 joblib
 memoized-property
 termcolor
-json
 pytz
-pickle
-datetime

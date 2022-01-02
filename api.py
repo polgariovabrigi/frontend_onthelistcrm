@@ -12,25 +12,12 @@ def root():
     return "Hello from Cloud Run CD"
 
 # #segmentation route
-# #get the uploaded files
-# @app.post("/uploadfile/")
-# async def create_upload_file(file: UploadFile = File(...)):
-#    return {
-#       "filename": file.filename
-#    }
-
-@app.post("/uploadfile/")
+@app.get("/uploadfile/")
 async def upload_file(file: UploadFile = File(...)):
    return {
       "filename": file.filename
    }
 
-# UploadFileapp = FastAPI()
-# @app.post("/image") 
-# async def image(image: UploadFile = File(...)): 
-#     return {
-#    "filename": image.filename
-# }
 
 # @app.post("/get_csv", response_class = StreamingResponse)
 # def get_csv(file: bytes = File(...)):

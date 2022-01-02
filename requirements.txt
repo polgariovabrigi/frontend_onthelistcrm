@@ -9,7 +9,7 @@ python-multipart
 numpy
 pandas
 scikit-learn
-# tensorflow
+tensorflow
 
 # tests/linter
 black
@@ -26,6 +26,7 @@ s3fs
 fastapi
 uvicorn
 streamlit
+
 
 # utilities
 six>=1.14

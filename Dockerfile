@@ -1,6 +1,7 @@
 FROM python:3.8-buster
 
 COPY api.py api.py
+COPY on_the_list_crm/ on_the_list_crm/ 
 COPY requirements.txt requirements.txt
 
 

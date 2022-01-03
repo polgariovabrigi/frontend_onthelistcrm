@@ -3,7 +3,10 @@ import pickle
 from datetime import datetime
 import pytz
 
-from product_cat_and_gender import transform_dataset
+import cleansing_dataset
+import vendor_cat
+import product_cat_and_gender
+
 
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
@@ -86,11 +89,30 @@ class Segmentation():
 
 if __name__ == "__main__":
 
-    # init the model
-    segmentation = Segmentation(from_file = True, sample = False)
-    segmentation.get_data_and_clean()
-    # pipe = segmentation.fit()
-    # segmentation.save_km_model(pipe)
+    print('get the data')
+    print('...')
+    data_df = cleansing_dataset.get_raw_data(path='data/2020-2021_V2.csv', rows = 50_000)
+    print(f'data loaded : {data_df.shape}')
+
+    print('cleaning the data')
+    print('...')
+    data_df = cleansing_dataset.BasicCleaner().transform(data_df)
+    print(f'data clean : {data_df.shape}')
+
+
+    print('computing vendor cat')
+    print('...')
+    data_df = vendor_cat.vendor_cat(data_df)
+    print(f'vendor cat ok : {data_df.shape}')
+
+    print('computing product cat')
+    print('...')
+    data_df = product_cat_and_gender.transform_dataset(data_df)
+    print(f'product cat ok : {data_df.shape}')
+
+    print('computing the segmentation')
+    print('...')
+    segmentation = Segmentation(data_df)
     segmentation.load_km_model()
     segment_df = segmentation.predict()
     print(segment_df)

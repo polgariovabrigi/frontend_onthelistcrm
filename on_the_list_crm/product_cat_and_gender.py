@@ -65,6 +65,7 @@ def creating_X_and_y_train(data_df):
     data_sample_400_000_df.loc[data_sample_400_000_df["tags"].str.contains('dress'),'product_cat'] = 'clothes'
     data_sample_400_000_df.loc[data_sample_400_000_df["tags"].str.contains('underwear'),'product_cat'] = 'clothes'
     data_sample_400_000_df.loc[data_sample_400_000_df["tags"].str.contains('trousers'),'product_cat'] = 'clothes'
+    data_sample_400_000_df.loc[data_sample_400_000_df["tags"].str.contains('swimsuit'),'product_cat'] = 'clothes'
 
     data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('watershorts'),'product_cat'] = 'clothes'
     data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('top'),'product_cat'] = 'clothes'
@@ -75,6 +76,7 @@ def creating_X_and_y_train(data_df):
     data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('ready-to-wear'),'product_cat'] = 'clothes'
     data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('underwear'),'product_cat'] = 'clothes'
     data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('bra'),'product_cat'] = 'clothes'
+    data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('swimsuit'),'product_cat'] = 'clothes'
 
     # data_sample_400_000_df.loc[data_sample_400_000_df["vendor"].str.contains('risinglotus'),'product_cat'] = 'clothes'
     # data_sample_400_000_df.loc[data_sample_400_000_df["vendor"].str.contains('aliceolivia'),'product_cat'] = 'clothes'
@@ -146,7 +148,7 @@ def creating_X_and_y_train(data_df):
     data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('seafood'),'product_cat'] = 'food'
     data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('beef'),'product_cat'] = 'food'
     # data_sample_400_000_df.loc[data_sample_400_000_df["vendor"].str.contains('plantin kaviari'),'product_cat'] = 'food'
-
+    data_sample_400_000_df.loc[data_sample_400_000_df["tags"].str.contains('tea'),'product_cat'] = 'food'
 
     ### wine
     data_sample_400_000_df.loc[data_sample_400_000_df["product_type"].str.contains('wine'),'product_cat'] = 'wine'
@@ -307,9 +309,9 @@ def transform_dataset(data_df, verbose=0):
     data_df.drop(columns=['vendor_cat_tmp','title_tmp','product_type_tmp','tags_tmp','vendor_tmp'],inplace=True)
 
     # loading the models and the product_cat_dict
-    nlp_model = load_km_model(model_path='nlp_model_30_12_2021_00h29.sav')
-    tokenizer = load_tokenizer(model_path='tokenizer_for_nlp_model_29_12_2021_23h18.sav')
-    with open( 'product_cat_dict_29_12_2021_23h18.txt', 'rb' ) as f:
+    nlp_model = load_km_model(model_path='nlp_model_04_01_2022_04h14.sav')
+    tokenizer = load_tokenizer(model_path='tokenizer_for_nlp_model_03_01_2022_22h15.sav')
+    with open( 'product_cat_dict_03_01_2022_22h15.txt', 'rb' ) as f:
         dict_label = f.read().decode()
         dict_label = eval(dict_label)
 
@@ -323,10 +325,11 @@ def transform_dataset(data_df, verbose=0):
     count = 0
 
     while count < X_size-9999:
+        print(f'comput from line {count} to line {count + 10000 -1}')
         X_tmp = X.iloc[count:count+10000]
         X_token = tokenizer.texts_to_sequences(X_tmp)
         X_token_pad = pad_sequences(X_token,
-                                maxlen=78,
+                                maxlen=100,
                                 dtype='int32',
                                 padding='post',
                                 value=0.0)
@@ -339,10 +342,12 @@ def transform_dataset(data_df, verbose=0):
             pred_list_tmp.append(index)
         count = count+10000
 
-    X_tmp = X.iloc[count:X_size+1]
+    # X_tmp = X.iloc[count:X_size+1]
+    print(f'comput from line {count} to final line')
+    X_tmp = X.iloc[count:]
     X_token = tokenizer.texts_to_sequences(X_tmp)
     X_token_pad = pad_sequences(X_token,
-                            maxlen=78,
+                            maxlen=100,
                             dtype='int32',
                             padding='post',
                             value=0.0)
@@ -365,38 +370,28 @@ def transform_dataset(data_df, verbose=0):
     # data_df = data_df.drop(columns=['tmp_NLP','vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp'])
     return data_df
 
-def load_km_model(model_path='nlp_model_29_12_2021_01h16.sav'):
+def load_km_model(model_path='nlp_model_04_01_2022_04h14.sav'):
     nlp_model = pickle.load(open(model_path, 'rb'))
     return nlp_model
 
-def load_tokenizer(model_path='tokenizer_for_nlp_model_29_12_2021_20h20.sav'):
+def load_tokenizer(model_path='tokenizer_for_nlp_model_03_01_2022_22h15.sav'):
     tokenizer = pickle.load(open(model_path, 'rb'))
     return tokenizer
 
 if __name__ == "__main__" :
 
-    print('get the data')
-    print('...')
-    data_df = cleansing_dataset.get_raw_data(path='data/2020-2021_V2.csv', rows = None)
-    print(f'data loaded : {data_df.shape}')
-
-    print('cleaning the data')
-    print('...')
-    data_df = cleansing_dataset.BasicCleaner().transform(data_df)
-    print(f'data clean : {data_df.shape}')
-
-    print('computing vendor cat')
-    print('...')
-    data_df = vendor_cat.vendor_cat(data_df)
-    print(f'vendor cat ok : {data_df.shape}')
-
-    data_df.to_csv('data/clean_and_vendor_cat_done.csv')
-    # data_df = pd.read_csv('data/clean_and_vendor_cat_done.csv')
-
-    print('creating and saving the model')
-    print('...')
-    fit_and_save_nlp_model(data_df, batch_size=32,verbose=1)
-
-    # print('computing product cat')
+    #to save the model
+    # print('loading the data')
     # print('...')
-    # data_df = transform_dataset(data_df ,verbose=1)
+    # data_df = pd.read_csv('data/clean_and_vendor_cat_done.csv')
+    # print('creating and saving the model')
+    # print('...')
+    # fit_and_save_nlp_model(data_df, batch_size=32,verbose=1)
+
+    data_df = pd.read_csv('data/clean_and_vendor_cat_done.csv')
+
+    print('computing product cat')
+    print('...')
+    data_df = transform_dataset(data_df ,verbose=1)
+
+    data_df.to_csv('data/clean_and_vendor_and_product_cat_done.csv')

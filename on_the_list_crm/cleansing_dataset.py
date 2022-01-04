@@ -103,4 +103,4 @@ class BasicCleaner():
 if __name__ == "__main__":
     data_df = get_raw_data(path='/content/2020-2021_V2.csv')
     data_df = BasicCleaner().transform(data_df)
-    data_df
+    print(data_df.shape)

@@ -1,0 +1,1 @@
+{0: 'accessory', 1: 'bath_body', 2: 'clothes', 3: 'food', 4: 'home', 5: 'kitchen', 6: 'shoes', 7: 'wine'}

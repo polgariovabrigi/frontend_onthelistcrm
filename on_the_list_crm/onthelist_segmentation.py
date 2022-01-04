@@ -80,6 +80,7 @@ class Segmentation():
         d = datetime.now(pytz.timezone('Asia/Hong_Kong')).strftime("%d_%m_%Y_%Hh%M")
         filename = f'kmean_model_{d}.sav'
         pickle.dump(self.km_model, open(filename, 'wb'))
+        print(f"model save as : {filename}")
         return self
 
     def load_km_model(self):
@@ -89,30 +90,39 @@ class Segmentation():
 
 if __name__ == "__main__":
 
-    print('get the data')
-    print('...')
-    data_df = cleansing_dataset.get_raw_data(path='data/2020-2021_V2.csv', rows = 50_000)
-    print(f'data loaded : {data_df.shape}')
+    # print('get the data')
+    # print('...')
+    # data_df = cleansing_dataset.get_raw_data(path='data/2020-2021_V2.csv', rows = 50_000)
+    # print(f'data loaded : {data_df.shape}')
 
-    print('cleaning the data')
-    print('...')
-    data_df = cleansing_dataset.BasicCleaner().transform(data_df)
-    print(f'data clean : {data_df.shape}')
+    # print('cleaning the data')
+    # print('...')
+    # data_df = cleansing_dataset.BasicCleaner().transform(data_df)
+    # print(f'data clean : {data_df.shape}')
 
 
-    print('computing vendor cat')
-    print('...')
-    data_df = vendor_cat.vendor_cat(data_df)
-    print(f'vendor cat ok : {data_df.shape}')
+    # print('computing vendor cat')
+    # print('...')
+    # data_df = vendor_cat.vendor_cat(data_df)
+    # print(f'vendor cat ok : {data_df.shape}')
+
+    data_df = pd.read_csv('data/clean_and_vendor_cat_done.csv')
 
     print('computing product cat')
     print('...')
-    data_df = product_cat_and_gender.transform_dataset(data_df)
+    data_df = product_cat_and_gender.transform_dataset(data_df ,verbose=1)
     print(f'product cat ok : {data_df.shape}')
 
-    print('computing the segmentation')
+    # print('computing the segmentation')
+    # print('...')
+    # segmentation = Segmentation(data_df)
+    # segmentation.load_km_model()
+    # segment_df = segmentation.predict()
+    # print(segment_df)
+
+    print('saving the km model')
     print('...')
     segmentation = Segmentation(data_df)
-    segmentation.load_km_model()
-    segment_df = segmentation.predict()
-    print(segment_df)
+    segmentation.fit()
+    segmentation.save_km_model()
+    # print(segment_df)

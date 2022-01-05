@@ -3,6 +3,7 @@ pip>=9
 setuptools>=26
 twine
 wheel>=0.29
+python-multipart
 
 # data science
 numpy
@@ -10,25 +11,24 @@ pandas
 scikit-learn
 tensorflow
 
-# tests/linter
-black
-coverage
-flake8
-pytest
-yapf
+# # tests/linter
+# black
+# coverage
+# flake8
+# pytest
+# yapf
 
 # API
 gcsfs
 google-cloud-storage
-mlflow
-s3fs
+# s3fs not sure whats this package
+fastapi
+uvicorn
+streamlit
+
 
 # utilities
 six>=1.14
 joblib
-memoized-property
-termcolor
-json
+# termcolor not sure whats this package
 pytz
-pickle
-datetime

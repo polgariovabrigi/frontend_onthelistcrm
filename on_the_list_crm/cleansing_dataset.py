@@ -3,7 +3,7 @@ import pandas as pd
 
 def get_raw_data(path='data/2020-2021_V2.csv', rows = None):
     #load data
-    data_df = pd.read_csv(path, nrows=rows,encoding='latin1')
+    data_df = pd.read_csv(path, nrows=rows)
     return data_df
 
 

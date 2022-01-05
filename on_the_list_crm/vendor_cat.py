@@ -1,3 +1,4 @@
+import pandas as pd
 import cleansing_dataset
 
 def vendor_cat(data_df):
@@ -20,12 +21,12 @@ if __name__ == "__main__":
     print('...')
     data_df = cleansing_dataset.BasicCleaner().transform(data_df)
     print(f'data clean : {data_df.shape}')
+    data_df.to_pickle('data/01_clean_done.pkl')
+    print(f'new data_df saved as : 01_clean_done.pkl')
 
     print('computing vendor cat')
     print('...')
     data_df = vendor_cat(data_df)
     print(f'vendor cat ok : {data_df.shape}')
-
-    data_df.to_csv('data/clean_and_vendor_cat_done.csv')
-    # print(f'new data_df saved as : clean_and_vendor_cat_done.csv')
-    print(f'new data_df saved as : clean_and_vendor_cat_done.csv',encoding='utf-8-sig')
+    data_df.to_pickle('data/02_clean_+_vendor_cat_done.pkl')
+    print(f'new data_df saved as : 02_clean_+_vendor_cat_done.csv.pkl')

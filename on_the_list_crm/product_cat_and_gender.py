@@ -271,7 +271,7 @@ def initiat_nlp_model(max_size,vocab_size):
     nlp_model.add(layers.LSTM(units=20))
     nlp_model.add(layers.Dense(10,activation="relu"))
     nlp_model.add(layers.Dense(10,activation="relu"))
-    nlp_model.add(layers.Dense(9,activation="softmax"))
+    nlp_model.add(layers.Dense(8,activation="softmax"))
     return nlp_model
 
 def fit_nlp_model(nlp_model,X_train_token_pad,y_train,batch_size=32,verbose=0):
@@ -309,9 +309,9 @@ def transform_dataset(data_df, verbose=0):
     data_df.drop(columns=['vendor_cat_tmp','title_tmp','product_type_tmp','tags_tmp','vendor_tmp'],inplace=True)
 
     # loading the models and the product_cat_dict
-    nlp_model = load_km_model(model_path='nlp_model_04_01_2022_04h14.sav')
-    tokenizer = load_tokenizer(model_path='tokenizer_for_nlp_model_03_01_2022_22h15.sav')
-    with open( 'product_cat_dict_03_01_2022_22h15.txt', 'rb' ) as f:
+    nlp_model = load_km_model(model_path='nlp_model_05_01_2022_16h16.sav')
+    tokenizer = load_tokenizer(model_path='tokenizer_for_nlp_model_05_01_2022_15h43.sav')
+    with open( 'product_cat_dict_05_01_2022_15h43.txt', 'rb' ) as f:
         dict_label = f.read().decode()
         dict_label = eval(dict_label)
 
@@ -380,18 +380,19 @@ def load_tokenizer(model_path='tokenizer_for_nlp_model_03_01_2022_22h15.sav'):
 
 if __name__ == "__main__" :
 
-    #to save the model
+    #### to save the model ####
     # print('loading the data')
     # print('...')
-    # data_df = pd.read_csv('data/clean_and_vendor_cat_done.csv')
+    # data_df = pd.read_pickle('data/02_clean_+_vendor_cat_done.pkl')
+
     # print('creating and saving the model')
     # print('...')
-    # fit_and_save_nlp_model(data_df, batch_size=32,verbose=1)
+    # fit_and_save_nlp_model(data_df, batch_size=1024,verbose=1)
 
-    data_df = pd.read_csv('data/clean_and_vendor_cat_done.csv')
 
+    #### to comput product cat ####
+    data_df = pd.read_pickle('data/02_clean_+_vendor_cat_done.pkl')
     print('computing product cat')
     print('...')
     data_df = transform_dataset(data_df ,verbose=1)
-
-    data_df.to_csv('data/clean_and_vendor_and_product_cat_done.csv')
+    data_df.to_pickle('data/03_clean_+_vendor_and_product_cat_done.pkl')

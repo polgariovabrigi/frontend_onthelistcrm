@@ -3,11 +3,6 @@ import pickle
 from datetime import datetime
 import pytz
 
-import cleansing_dataset
-import vendor_cat
-import product_cat_and_gender
-
-
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
@@ -19,37 +14,16 @@ from sklearn.preprocessing import StandardScaler
 
 class Segmentation():
 
-    # def __init__(self, sample = False, from_file = False, raw_data_path='data/2020-2021.csv' , file_path='data/all_clean.csv', model_path='kmean_model_28_12_2021_16h44.sav'):
-        # self.sample = sample
-        # self.from_file = from_file
-        # self.file_path = file_path
-        # self.model_path = model_path
-        # self.raw_data_path = raw_data_path
-
     def __init__(self,data_df):
         self.data_df = data_df
         self.id_df = data_df[['order_ID','item_ID','date','customer_ID']]
 
-    # def get_data_and_clean(self, rows_nlp = 200_000):
-    #     # if we are working with a origine csv from Onthelist
-    #     # this part will clean and creat the columns we need
-    #     # for the kmean model
-    #     if self.from_file == False:
-    #         self.data_df = transform_dataset(data_path = self.raw_data_path, rows = None, verbose=0)
-    #     # if we are working with a csv already clean and ready for the kmean model
-    #     else:
-    #         self.data_df = pd.read_csv(self.file_path)
-    #     # if work only on a part of the data
-    #     if self.sample != False:
-    #         self.data_df = self.data_df.sample(n=self.sample,random_state=42)
-    #     self.id_df = self.data_df[['order_ID','item_ID','date','customer_ID']]
-    #     return self.data_df
-
     def set_pipeline(self, n_cluster=10):
         preproc_pipe = ColumnTransformer([('normal_distributed_encoded', StandardScaler(), ['age']),
                                           ('num_minmax_encoded', MinMaxScaler(), ['item_price', 'final_price','item_quantity','item_discount']),
-                                        #   ('categorical_encoded', OneHotEncoder(sparse = False), ['vendor','product_cat','gender','product_gender','premium_status','district','nationality','on_off'])])
-                                          ('categorical_encoded', OneHotEncoder(sparse = False), ['product_cat','gender','product_gender','premium_status','district','nationality','on_off'])])
+                                          ('categorical_encoded', OneHotEncoder(sparse = False), ['product_cat','gender','vendor_cat','premium_status','district','nationality','on_off'])
+                                        ])
+
         self.pipe = Pipeline([('preproc', preproc_pipe),
                               ('pca', PCA(n_components=10,random_state=42)), #81% explained
                               ('kmeans',KMeans(n_clusters=n_cluster,random_state=42,))
@@ -84,34 +58,11 @@ class Segmentation():
         return self
 
     def load_km_model(self):
-        self.km_model = pickle.load(open('kmean_model_28_12_2021_16h44.sav', 'rb'))
+        self.km_model = pickle.load(open('kmean_model_05_01_2022_19h19.sav', 'rb'))
         return self.km_model
 
 
 if __name__ == "__main__":
-
-    # print('get the data')
-    # print('...')
-    # data_df = cleansing_dataset.get_raw_data(path='data/2020-2021_V2.csv', rows = 50_000)
-    # print(f'data loaded : {data_df.shape}')
-
-    # print('cleaning the data')
-    # print('...')
-    # data_df = cleansing_dataset.BasicCleaner().transform(data_df)
-    # print(f'data clean : {data_df.shape}')
-
-
-    # print('computing vendor cat')
-    # print('...')
-    # data_df = vendor_cat.vendor_cat(data_df)
-    # print(f'vendor cat ok : {data_df.shape}')
-
-    data_df = pd.read_csv('data/clean_and_vendor_cat_done.csv')
-
-    print('computing product cat')
-    print('...')
-    data_df = product_cat_and_gender.transform_dataset(data_df ,verbose=1)
-    print(f'product cat ok : {data_df.shape}')
 
     # print('computing the segmentation')
     # print('...')
@@ -120,9 +71,32 @@ if __name__ == "__main__":
     # segment_df = segmentation.predict()
     # print(segment_df)
 
-    print('saving the km model')
+    data_df = pd.read_pickle('data/03_clean_+_vendor_and_product_cat_done.pkl')
+    # data_df = data_df.sample(n=500_000, random_state=45)
+
+    print('init the segmentation')
     print('...')
     segmentation = Segmentation(data_df)
-    segmentation.fit()
-    segmentation.save_km_model()
+    print('init done')
+    # print('fit the model')
+    # print('...')
+    # segmentation.fit()
+    # print('fit done')
+    print('loading the km model')
+    print('...')
+    segmentation.load_km_model()
+    print('model loaded')
+
+    print('prediction')
+    print('...')
+    segment_df = segmentation.predict()
+    print('prediction done')
+
+    segment_df.to_csv('data/segmentation_05_01_2022.csv')
+    segment_df.to_pickle('data/segmentation_05_01_2022.pkl')
+    print('file saved')
+    # print('saving the km model')
+    # print('...')
+    # segmentation.save_km_model()
+    # print('model saved')
     # print(segment_df)

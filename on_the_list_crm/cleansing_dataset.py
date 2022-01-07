@@ -6,7 +6,6 @@ def get_raw_data(path='data/2020-2021_V2.csv', rows = None):
     data_df = pd.read_csv(path, nrows=rows)
     return data_df
 
-
 class BasicCleaner():
 
     def __init__(self):
@@ -96,9 +95,6 @@ class BasicCleaner():
         data_df['product_gender'] = '__'
         data_df['vendor_cat'] = '__'
         return data_df
-
-
-
 
 if __name__ == "__main__":
     data_df = get_raw_data(path='/content/2020-2021_V2.csv')

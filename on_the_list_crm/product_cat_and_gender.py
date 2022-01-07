@@ -3,9 +3,6 @@ from datetime import datetime
 import pytz
 import pickle
 
-import cleansing_dataset
-import vendor_cat
-
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -299,7 +296,7 @@ def save_nlp_model(nlp_model):
 
 # ______________________________________________________________________
 
-def transform_dataset(data_df, verbose=0):
+def transform_dataset(data_df, nlp_model, tokenizer, verbose=0):
     data_df['vendor_tmp'] = data_df['vendor'].astype(str)
     data_df['vendor_cat_tmp'] = data_df['vendor_cat'].astype(str)
     data_df['title_tmp'] = data_df['title'].astype(str)
@@ -309,9 +306,7 @@ def transform_dataset(data_df, verbose=0):
     data_df.drop(columns=['vendor_cat_tmp','title_tmp','product_type_tmp','tags_tmp','vendor_tmp'],inplace=True)
 
     # loading the models and the product_cat_dict
-    nlp_model = load_km_model(model_path='nlp_model_05_01_2022_16h16.sav')
-    tokenizer = load_tokenizer(model_path='tokenizer_for_nlp_model_05_01_2022_15h43.sav')
-    with open( 'product_cat_dict_05_01_2022_15h43.txt', 'rb' ) as f:
+    with open( 'on_the_list_crm/product_cat_dict_05_01_2022_15h43.txt', 'rb' ) as f:
         dict_label = f.read().decode()
         dict_label = eval(dict_label)
 
@@ -370,11 +365,11 @@ def transform_dataset(data_df, verbose=0):
     # data_df = data_df.drop(columns=['tmp_NLP','vendor_tmp', 'title_tmp', 'product_type_tmp', 'tags_tmp'])
     return data_df
 
-def load_km_model(model_path='nlp_model_04_01_2022_04h14.sav'):
+def load_nlp_model(model_path='on_the_list_crm/nlp_model_05_01_2022_16h16.sav'):
     nlp_model = pickle.load(open(model_path, 'rb'))
     return nlp_model
 
-def load_tokenizer(model_path='tokenizer_for_nlp_model_03_01_2022_22h15.sav'):
+def load_tokenizer(model_path='on_the_list_crm/tokenizer_for_nlp_model_05_01_2022_15h43.sav'):
     tokenizer = pickle.load(open(model_path, 'rb'))
     return tokenizer
 

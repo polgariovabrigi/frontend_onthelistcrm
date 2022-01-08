@@ -1,7 +1,13 @@
 from fastapi import FastAPI, File, UploadFile
 import pandas as pd
+
+from on_the_list_crm.cleansing_dataset import BasicCleaner
+from on_the_list_crm.vendor_cat import vendor_cat
+from on_the_list_crm.product_cat_and_gender import load_nlp_model , load_tokenizer, transform_dataset
 from on_the_list_crm.onthelist_segmentation import Segmentation
-from on_the_list_crm.product_cat_and_gender import transform_dataset
+
+# from on_the_list_crm.onthelist_segmentation import Segmentation
+# from on_the_list_crm.product_cat_and_gender import transform_dataset
 
 #main page for testing API
 app = FastAPI()
@@ -13,6 +19,7 @@ def root():
 @app.post("/uploadfile/")
 async def upload_file(csv_file: UploadFile = File(...)):
     contents = await csv_file.read()
+
     df = pd.read_csv(csv_file.file)
 
     # data_df = pd.read_dict(contents)
@@ -26,6 +33,7 @@ async def upload_file(csv_file: UploadFile = File(...)):
     #return prediction
     # return {"filename": csv_file.filename,
     #         "filetype": csv_file.content_type,
+
     #         "content": contents 
     #         }  
     
@@ -38,5 +46,4 @@ async def upload_file(csv_file: UploadFile = File(...)):
 # @app.get("/predict_product")
 # def predict_customer():
 #     return "Testing our deployment"
-
 

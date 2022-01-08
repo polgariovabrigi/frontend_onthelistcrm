@@ -13,12 +13,15 @@ def root():
 @app.post("/uploadfile/")
 async def upload_file(csv_file: UploadFile = File(...)):
     contents = await csv_file.read()
-    data_df = pd.read_dict(contents)
-    data_df = transform_dataset(data_df)
-    segmentation = Segmentation(data_df)
-    segmentation.load_km_model()
-    segment_df = segmentation.predict()
-    return segment_df
+    df = pd.read_csv(csv_file.file)
+
+    # data_df = pd.read_dict(contents)
+    # data_df = transform_dataset(data_df)
+    # segmentation = Segmentation(data_df)
+    # segmentation.load_km_model()
+    # segment_df = segmentation.predict()
+    return df
+
 
     #return prediction
     # return {"filename": csv_file.filename,

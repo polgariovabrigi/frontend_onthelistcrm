@@ -11,18 +11,17 @@ pandas
 scikit-learn
 tensorflow
 
-# tests/linter
-black
-coverage
-flake8
-pytest
-yapf
+# # tests/linter
+# black
+# coverage
+# flake8
+# pytest
+# yapf
 
 # API
 gcsfs
 google-cloud-storage
-mlflow
-s3fs
+# s3fs not sure whats this package
 fastapi
 uvicorn
 streamlit
@@ -31,6 +30,5 @@ streamlit
 # utilities
 six>=1.14
 joblib
-memoized-property
-termcolor
+# termcolor not sure whats this package
 pytz

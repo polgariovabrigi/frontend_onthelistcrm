@@ -3,7 +3,7 @@ import pickle
 from datetime import datetime
 import pytz
 
-from product_cat_and_gender import transform_dataset
+from on_the_list_crm.product_cat_and_gender import transform_dataset
 
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline

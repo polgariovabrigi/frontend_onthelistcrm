@@ -3,6 +3,7 @@ import pandas as pd
 from on_the_list_crm.onthelist_segmentation import Segmentation
 from on_the_list_crm.product_cat_and_gender import transform_dataset
 from io import StringIO
+import json
 
 #main page for testing API
 app = FastAPI()
@@ -14,9 +15,9 @@ def root():
 @app.post("/uploadfile/")
 async def create_upload_file(file: UploadFile = File(...)):
     content = await file.read()
-    # df = pd.read_csv(StringIO(str(content)), encoding='utf-8')
-    # print(type(df))
-    print(type(content))
+    json_data = json.loads(content.decode('utf-8'))
+    data_df =pd.DataFrame(json_data)
+    data_df = transform_dataset(data_df)
     return content
 
 # #segmentation route
@@ -27,7 +28,7 @@ async def create_upload_file(file: UploadFile = File(...)):
     # df = pd.read_csv(csv_file.file)
 
     # data_df = pd.read_dict(contents)
-    # data_df = transform_dataset(data_df)
+    data_df = transform_dataset(data_df)
     # segmentation = Segmentation(data_df)
     # segmentation.load_km_model()
     # segment_df = segmentation.predict()

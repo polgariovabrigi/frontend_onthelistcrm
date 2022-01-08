@@ -1,7 +1,7 @@
 FROM python:3.8-buster
 
 COPY api.py api.py
-COPY app.py app.py
+
 
 COPY on_the_list_crm/onthelist_segmentation.py on_the_list_crm/onthelist_segmentation.py
 COPY on_the_list_crm/product_cat_and_gender.py on_the_list_crm/product_cat_and_gender.py

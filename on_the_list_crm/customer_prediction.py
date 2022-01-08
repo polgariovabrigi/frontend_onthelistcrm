@@ -3,7 +3,7 @@ from six import print_
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.compose import ColumnTransformer
-from product_cat_and_gender import fit,transform
+from on_the_list_crm.product_cat_and_gender import fit,transform
 from sklearn.neighbors import NearestNeighbors
 import pandas as pd
 

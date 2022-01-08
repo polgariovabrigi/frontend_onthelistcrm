@@ -3,6 +3,9 @@ import pickle
 from datetime import datetime
 import pytz
 
+
+from on_the_list_crm.product_cat_and_gender import transform_dataset
+
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
@@ -35,9 +38,9 @@ class Segmentation():
         self.km_model = self.pipe.fit(self.data_df)
         return self.km_model
 
-    def predict(self):
+    def predict(self, data_df):
         # returning the segmntation df with ID (one customer_ID can epear many times)
-        self.id_df['segmentation'] = self.km_model.predict(self.data_df)
+        self.id_df['segmentation'] = self.km_model.predict(data_df)
         # creating empty list to creat the final DF with unique customer_ID
         seg = []
         cust = []
@@ -68,7 +71,9 @@ class Segmentation():
         return self
 
     def load_km_model(self):
+
         self.km_model = pickle.load(open('kmean_model_07_01_2022_09h15.sav', 'rb'))
+
         return self.km_model
 
 

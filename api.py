@@ -19,24 +19,24 @@ def root():
 @app.post("/uploadfile/")
 async def upload_file(csv_file: UploadFile = File(...)):
     contents = await csv_file.read()
-    data_df = pd.read_dict(contents)
-    return data_df
-    # data_df = BasicCleaner(data_df)
-    # data_df = vendor_cat(data_df)
-    # nlp_model = load_nlp_model(model_path='on_the_list_crm/kmean_model_05_01_2022_19h19.sav')
-    # tokenizer = load_tokenizer(model_path='on_the_list_crm/tokenizer_for_nlp_model_05_01_2022_15h43.sav')
-    # transform_dataset(data_df, nlp_model, tokenizer)
+
+    df = pd.read_csv(csv_file.file)
+
+    # data_df = pd.read_dict(contents)
+    # data_df = transform_dataset(data_df)
     # segmentation = Segmentation(data_df)
     # segmentation.load_km_model()
     # segment_df = segmentation.predict()
-    # return segment_df
+    return df
+
 
     #return prediction
     # return {"filename": csv_file.filename,
     #         "filetype": csv_file.content_type,
-    #         "content": contents
-    #         }
 
+    #         "content": contents 
+    #         }  
+    
 #Loading the trained model
 # with open("./finalized_model.pkl", "rb") as f:
 #     loaded_model = pickle.load(f)
@@ -46,3 +46,4 @@ async def upload_file(csv_file: UploadFile = File(...)):
 # @app.get("/predict_product")
 # def predict_customer():
 #     return "Testing our deployment"
+

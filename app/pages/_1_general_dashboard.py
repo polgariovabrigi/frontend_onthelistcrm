@@ -1,8 +1,8 @@
 import streamlit as st
 
 def app():
-    '''
-    # General dashboard
 
-    Work in progress
-    '''
+    st.markdown("""
+        ###### Dashboard
+        ####### Analisis of the full database
+    """)

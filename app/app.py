@@ -1,34 +1,47 @@
 import streamlit as st
-import requests
-import pandas as pd
 
-# url = 'http://localhost:8000/predict'
-# response = requests.get(url)
-# response.json()
+# Custom imports
+from multipage import MultiPage
+from pages import _1_general_dashboard, _2_segmentation_dashboard, _3_csv_prediction, _4_customer_prediction  # import your pages here
 
-'''
-# OnTheList Segmentation Model
+# Create an instance of the app
+app = MultiPage()
 
-Model returns segments for each client in CSV file
-'''
+# Title of the main page
+st.title("OnTheList Data Alalys and Prediction")
+st.markdown("""
+    ##### Extraction of keys elements from the database and prediction about segmentation and customers
+""")
 
-'''
-Please upload CSV file
-'''
-#upload file
-uploaded_file = st.file_uploader(
-  "Upload your csv file", type=["csv"], accept_multiple_files=False)
+# Add all your applications (pages) here
+app.add_page("General dashboard", _1_general_dashboard.app)
+app.add_page("Segmentation dashboard", _2_segmentation_dashboard.app)
+app.add_page("Upload CSV and analyse", _3_csv_prediction.app)
+app.add_page("Customer prediction", _4_customer_prediction.app)
 
-if uploaded_file is not None:
-    dataframe = pd.read_csv(uploaded_file)
-    st.write(dataframe)
-    json = dataframe.to_json()
-    # st.write(json)
-    url_post = 'http://localhost:5000/uploadfile/'
-    file = {"file": json}
-    response = requests.post(url_post,files=file)
-    # api_answer = response.text
-    st.write(response.text)
+# The main app
+app.run()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # files = {'csv_file': uploaded_file.read()}
     # api_answer = response.json()
     # st.write(api_answer)

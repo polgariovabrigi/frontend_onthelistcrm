@@ -3,9 +3,6 @@ import pickle
 from datetime import datetime
 import pytz
 
-
-from on_the_list_crm.product_cat_and_gender import transform_dataset
-
 from sklearn.cluster import KMeans
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
@@ -72,7 +69,7 @@ class Segmentation():
 
     def load_km_model(self):
 
-        self.km_model = pickle.load(open('kmean_model_07_01_2022_09h15.sav', 'rb'))
+        self.km_model = pickle.load(open('on_the_list_crm/kmean_model_07_01_2022_09h15.sav', 'rb'))
 
         return self.km_model
 

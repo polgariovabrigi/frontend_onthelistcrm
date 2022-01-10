@@ -1,5 +1,4 @@
-from pandas.core.arrays.integer import Int8Dtype
-from six import print_
+
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.compose import ColumnTransformer

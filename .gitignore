@@ -8,3 +8,4 @@ raw_data/
 .env
 app/data/
 on_the_list_crm/data/
+*.pickel

@@ -9,7 +9,7 @@ python-multipart
 numpy
 pandas
 scikit-learn
-tensorflow
+tensorflow-cpu
 
 # # tests/linter
 # black
@@ -20,7 +20,7 @@ tensorflow
 
 # API
 gcsfs
-google-cloud-storage
+# google-cloud-storage
 # s3fs not sure whats this package
 fastapi
 uvicorn

@@ -9,6 +9,7 @@ python-multipart
 numpy
 pandas
 requests
+matplotlib
 
 # APP
 streamlit

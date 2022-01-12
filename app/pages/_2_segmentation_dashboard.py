@@ -11,12 +11,12 @@ def app():
     Work in progress
     '''
 
-    data_df = pd.read_pickle('on_the_list_crm/data/segmentation_all_df_07_01_2022_3.pkl')
-    seg_df = pd.read_pickle('on_the_list_crm/data/segmentation_07_01_2022.pkl')
+    data_df = pd.read_pickle('app/data/segmentation_all_df_07_01_2022_3.pkl')
+    seg_df = pd.read_pickle('app/data/segmentation_07_01_2022.pkl')
     data_df_cust = data_df.drop_duplicates(subset=['customer_ID'], keep='last')
     table_final_price = pd.pivot_table(data_df, values='final_price', index=['customer_ID'], aggfunc=np.sum)
-    spend_per_purchase = pd.read_pickle('on_the_list_crm/data/spend_per_purchase.pkl')
-    nb_of_itm_per_purchase = pd.read_pickle('on_the_list_crm/data/nb_of_itm.pkl')
+    spend_per_purchase = pd.read_pickle('app/data/spend_per_purchase.pkl')
+    nb_of_itm_per_purchase = pd.read_pickle('app/data/nb_of_itm.pkl')
 
     row1_space1, row1_1, row1_space2, row1_2, row1_space3, row1_3, row1_3_space4 = st.columns((.1, 1, .1, 1, .1, 1, .1))
     with row1_1:

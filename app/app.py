@@ -1,26 +1,37 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
 
 # Custom imports
 from multipage import MultiPage
 from pages import _1_general_dashboard, _2_segmentation_dashboard, _3_csv_prediction, _4_customer_prediction  # import your pages here
 
+st.set_page_config(layout="wide")
+
 # Create an instance of the app
 app = MultiPage()
 
 # Title of the main page
-st.title("OnTheList Data Alalys and Prediction")
+# st.title("OnTheList Data Alalys and Prediction")
 st.markdown("""
+    ### OnTheList Data Alalys and Prediction
     ##### Extraction of keys elements from the database and prediction about segmentation and customers
 """)
 
+
+
 # Add all your applications (pages) here
-app.add_page("General dashboard", _1_general_dashboard.app)
+app.add_page("Dashboard", _1_general_dashboard.app)
 app.add_page("Segmentation dashboard", _2_segmentation_dashboard.app)
 app.add_page("Upload CSV and analyse", _3_csv_prediction.app)
 app.add_page("Customer prediction", _4_customer_prediction.app)
 
 # The main app
 app.run()
+
+
+
+
 
 
 

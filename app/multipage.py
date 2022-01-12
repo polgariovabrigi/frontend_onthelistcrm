@@ -30,18 +30,17 @@ class MultiPage:
 
     def run(self):
 
-        # page = st.selectbox("App Navigation",
-        #                     self.pages,
-        #                     format_func=lambda page: page['title']
-        #                     )
+        page = st.selectbox("App Navigation",
+                            self.pages,
+                            format_func=lambda page: page['title']
+                            )
 
 
-        page = st.sidebar
-
-        page = page.radio("App Navigation",
-                          self.pages,
-                          format_func=lambda page: page['title']
-                          )
+        # page = st.sidebar
+        # page = page.radio("App Navigation",
+        #                   self.pages,
+        #                   format_func=lambda page: page['title']
+        #                   )
 
         # run the app function
         page['function']()

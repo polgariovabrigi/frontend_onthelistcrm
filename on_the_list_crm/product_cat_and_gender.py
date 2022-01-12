@@ -4,7 +4,7 @@ import pytz
 import pickle
 
 
-from on_the_list_crm.cleansing_dataset import get_raw_data, BasicCleaner, GetDataFrameToTrainNLP
+from on_the_list_crm.cleansing_dataset import get_raw_data, BasicCleaner
 
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.preprocessing.text import Tokenizer

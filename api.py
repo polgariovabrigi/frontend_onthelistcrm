@@ -26,6 +26,6 @@ async def create_upload_file(file: UploadFile = File(...)):
     data_df = transform_dataset(data_df, nlp_model, tokenizer, verbose=1)
     segmentation = Segmentation(data_df)
     segmentation.load_km_model()
-    data_df = segmentation.predict(data_df)
+    data_df = segmentation.predict_all_df()
     js = data_df.to_json(orient = 'columns')
     return js

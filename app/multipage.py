@@ -6,6 +6,8 @@ through an object oriented framework.
 
 # Import necessary libraries
 import streamlit as st
+import pandas as pd
+import numpy as np
 
 # Define the multipage class to manage the multiple apps in our program
 class MultiPage:
@@ -14,6 +16,12 @@ class MultiPage:
     def __init__(self) -> None:
         """Constructor class to generate a list which will store all our applications as an instance variable."""
         self.pages = []
+        # self.data_df = pd.read_pickle('on_the_list_crm/data/segmentation_all_df_07_01_2022_2.pkl')
+        # self.data_df_cust = self.data_df.drop_duplicates(subset=['customer_ID'], keep='last')
+        # self.table_final_price = pd.pivot_table(self.data_df, values='final_price', index=['customer_ID'], aggfunc=np.sum)
+        # self.spend_per_purchase = pd.read_pickle('on_the_list_crm/data/spend_per_purchase.pkl')
+        # self.nb_of_itm_per_purchase = pd.read_pickle('on_the_list_crm/data/nb_of_itm.pkl')
+
 
     def add_page(self, title, func) -> None:
         """Class Method to Add pages to the project

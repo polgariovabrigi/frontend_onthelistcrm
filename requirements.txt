@@ -10,9 +10,11 @@ numpy
 pandas
 requests
 matplotlib
+seaborn 
 
 # APP
 streamlit
+requests
 
 # utilities
 six>=1.14

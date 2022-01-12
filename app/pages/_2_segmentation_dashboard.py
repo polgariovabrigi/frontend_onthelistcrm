@@ -101,14 +101,22 @@ def app():
         col1, col2, col3, col4 = st.columns((1,1,1,1))
         with col1:
             st.metric("Number of unique customer", len(seg_0_df['customer_ID'].unique().tolist()),f"{round(data_0_df_cust['segmentation'].count()/data_df_cust['segmentation'].count(),4)*100}% of total",delta_color="off")
-            # st.text(f"{round(data_0_df_cust['segmentation'].count()/data_df_cust['segmentation'].count(),4)*100}% of total")
         with col2:
             st.metric("Average age", round(data_0_df_cust['age'].mean(),2),f"{round(data_0_df_cust['age'].mean()-data_df_cust['age'].mean(),2)} years")
         with col3:
             st.metric("Average number of time they came", round(data_0_df.drop_duplicates(subset=['date','customer_ID'], keep='last').groupby('customer_ID')[['date']].agg('count').reset_index()['date'].mean(),2) ,round(data_0_df.drop_duplicates(subset=['date','customer_ID'], keep='last').groupby('customer_ID')[['date']].agg('count').reset_index()['date'].mean() - data_df.drop_duplicates(subset=['date','customer_ID'], keep='last').groupby('customer_ID')[['date']].agg('count').reset_index()['date'].mean(),2))
         with col4:
             st.metric("Pourcentage of premium customers", f"{round(data_0_df_cust[data_0_df_cust['premium_status']=='y']['premium_status'].count()/data_0_df_cust['premium_status'].count()*100,2)}%",f"{round((data_0_df_cust[data_0_df_cust['premium_status']=='y']['premium_status'].count()/data_0_df_cust['premium_status'].count()*100)-(data_df_cust[data_df_cust['premium_status']=='y']['premium_status'].count()/data_df_cust['premium_status'].count()*100),2)} points")
-            # st.text(f"{round((data_0_df_cust[data_0_df_cust['premium_status']=='y']['premium_status'].count()/data_0_df_cust['premium_status'].count()*100)-(data_df_cust[data_df_cust['premium_status']=='y']['premium_status'].count()/data_df_cust['premium_status'].count()*100),2)} points")
+
+        col1, col2, col3, col4 = st.columns((1,1,1,1))
+        with col1:
+            st.metric("fidelity to this group", f"{round(data_0_df[data_0_df['segmentation'] == seg]['segmentation'].count()/data_0_df['segmentation'].count()*100,2)}%")
+        with col2:
+            st.metric("weight of this group in term of purchase ", f"{round(data_0_df['segmentation'].count()/data_df['segmentation'].count()*100,2)}%")
+        with col3:
+            st.metric("weight of this group in term of sepnding", f"{round(data_0_df['final_price'].sum()/data_df['final_price'].sum()*100,2)}%")
+        with col4:
+            st.metric("spending ratio", round((data_0_df['final_price'].sum()/data_df['final_price'].sum()*100)/(data_0_df_cust['segmentation'].count()/data_df_cust['segmentation'].count()*100),2))
 
         col1, spc, col2 = st.columns((2,.1,2))
         with col1:

@@ -11,7 +11,7 @@ def app():
     Work in progress
     '''
 
-    data_df = pd.read_pickle('on_the_list_crm/data/segmentation_all_df_07_01_2022.pkl')
+    data_df = pd.read_pickle('on_the_list_crm/data/segmentation_all_df_07_01_2022_3.pkl')
     seg_df = pd.read_pickle('on_the_list_crm/data/segmentation_07_01_2022.pkl')
     data_df_cust = data_df.drop_duplicates(subset=['customer_ID'], keep='last')
     table_final_price = pd.pivot_table(data_df, values='final_price', index=['customer_ID'], aggfunc=np.sum)

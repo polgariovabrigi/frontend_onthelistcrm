@@ -16,8 +16,11 @@ def root():
 # #segmentation route
 @app.post("/uploadfile/")
 async def create_upload_file(file: UploadFile = File(...)):
+    print(file)
     content = await file.read()
+    print(content)
     json_data = json.loads(content.decode('utf-8'))
+    print(json_data)
     data_df =pd.DataFrame(json_data)
     data_df = BasicCleaner().transform(data_df)
     data_df = vendor_cat(data_df)
